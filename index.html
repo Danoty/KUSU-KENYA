@@ -10,6 +10,9 @@
     <meta name="keywords" content="KUSU, Kenya University Staff Union, university staff union, workers rights, trade union Kenya" />
     <meta name="author" content="KUSU" />
 
+    <!-- Favicon / Logo -->
+    <link rel="icon" href="images/kusu-favicon.png" type="image/png" />
+
     <style>
         :root {
             --primary: #0052cc;      /* union blue */
@@ -32,6 +35,10 @@
             padding: 0;
         }
 
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
             font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
             background: var(--bg);
@@ -47,6 +54,15 @@
         a {
             color: inherit;
             text-decoration: none;
+        }
+
+        a:focus-visible,
+        button:focus-visible,
+        input:focus-visible,
+        textarea:focus-visible,
+        select:focus-visible {
+            outline: 2px solid var(--primary);
+            outline-offset: 2px;
         }
 
         .container {
@@ -109,9 +125,9 @@
             gap: 0.8rem;
         }
 
-        .brand-logo {
-            width: 40px;
-            height: 40px;
+        .brand-mark {
+            width: 44px;
+            height: 44px;
             border-radius: 50%;
             border: 2px solid var(--primary);
             background: radial-gradient(circle at 20% 20%, #ffffff 0, #e0ecff 35%, #0052cc 100%);
@@ -119,9 +135,26 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .brand-mark img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .brand-mark-fallback {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             font-weight: 800;
-            color: var(--white);
             font-size: 0.9rem;
+            color: var(--white);
+            text-shadow: 0 1px 3px rgba(15, 23, 42, 0.6);
         }
 
         .brand-text h1 {
@@ -250,11 +283,11 @@
                 display: flex;
                 flex-direction: column;
                 gap: 0.75rem;
-                font-size: 0.95rem;
             }
 
             .nav-mobile-inner a {
                 padding: 0.25rem 0;
+                font-size: 0.95rem;
             }
         }
 
@@ -342,12 +375,24 @@
             border-radius: var(--radius-lg);
             padding: 1.4rem;
             box-shadow: var(--shadow-soft);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-card::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at top right, rgba(0, 82, 204, 0.12), transparent 55%);
+            pointer-events: none;
         }
 
         .hero-card-title {
             font-size: 1rem;
             font-weight: 600;
             margin-bottom: 0.5rem;
+            position: relative;
+            z-index: 1;
         }
 
         .hero-pill-row {
@@ -355,6 +400,8 @@
             flex-wrap: wrap;
             gap: 0.6rem;
             margin-top: 0.6rem;
+            position: relative;
+            z-index: 1;
         }
 
         .pill {
@@ -368,6 +415,26 @@
         .pill.alert {
             background: rgba(200, 16, 46, 0.1);
             color: #7f1d1d;
+        }
+
+        /* Hero illustration (optional union/people image) */
+        .hero-illustration {
+            margin-top: 1.1rem;
+            border-radius: 1rem;
+            overflow: hidden;
+            border: 1px solid rgba(148, 163, 184, 0.25);
+        }
+
+        .hero-illustration img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+        }
+
+        @media (max-width: 480px) {
+            .hero-illustration img {
+                height: 150px;
+            }
         }
 
         /* Sections */
@@ -834,11 +901,35 @@
                 display: none;
             }
         }
+
+        /* Back to top button */
+        .back-to-top {
+            position: fixed;
+            right: 16px;
+            bottom: 72px;
+            z-index: 998;
+            display: none;
+        }
+
+        .back-to-top button {
+            border-radius: 999px;
+            border: none;
+            background: var(--primary);
+            color: #ffffff;
+            padding: 0.45rem 0.7rem;
+            font-size: 0.8rem;
+            box-shadow: 0 10px 20px rgba(0, 82, 204, 0.4);
+            cursor: pointer;
+        }
+
+        .back-to-top button:hover {
+            background: var(--primary-dark);
+        }
     </style>
 </head>
 <body>
     <!-- Top info bar -->
-    <div class="top-bar">
+    <div class="top-bar" aria-label="KUSU top information bar">
         <div class="container top-bar-inner">
             <span>✊ Defending the rights and welfare of university staff in Kenya.</span>
             <div class="top-bar-links">
@@ -850,17 +941,19 @@
     </div>
 
     <!-- Header / Nav -->
-    <header>
+    <header role="banner">
         <div class="container nav">
-            <div class="brand">
-                <div class="brand-logo" aria-hidden="true">
-                    K
+            <a href="#home" class="brand" aria-label="KUSU home">
+                <div class="brand-mark">
+                    <!-- Put your real logo at images/kusu-logo.png -->
+                    <img src="images/kusu-logo.png" alt="KUSU logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                    <div class="brand-mark-fallback">KUSU</div>
                 </div>
                 <div class="brand-text">
                     <h1>KUSU</h1>
                     <span>Kenya University Staff Union</span>
                 </div>
-            </div>
+            </a>
 
             <nav class="nav-links" aria-label="Main navigation">
                 <a href="#home">Home</a>
@@ -877,7 +970,7 @@
                 <button class="btn btn-outline" onclick="scrollToSection('resources')">CBAs</button>
                 <button class="btn btn-primary" onclick="scrollToSection('membership')">Join KUSU</button>
 
-                <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation menu">
+                <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation menu" aria-expanded="false">
                     <span></span>
                     <span></span>
                     <span></span>
@@ -902,14 +995,14 @@
 
     <!-- Hero -->
     <main id="home">
-        <section class="hero">
+        <section class="hero" aria-labelledby="hero-heading">
             <div class="container hero-grid">
                 <div>
                     <div class="hero-tag">
                         <span class="hero-tag-dot"></span>
                         <span>Unity • Solidarity • Justice</span>
                     </div>
-                    <h2 class="hero-title">
+                    <h2 id="hero-heading" class="hero-title">
                         Stronger together: <span>KUSU</span> for every university worker.
                     </h2>
                     <p class="hero-subtitle">
@@ -939,32 +1032,38 @@
                 </div>
 
                 <div>
-                    <div class="hero-card">
+                    <div class="hero-card" aria-label="Key union alerts">
                         <h3 class="hero-card-title">Key Union Alerts</h3>
                         <span class="badge badge-live">Important</span>
 
                         <div class="hero-pill-row">
-                            <span class="pill.alert pill">➤ No staff should be victimized for joining or supporting KUSU.</span>
+                            <span class="pill alert">➤ No staff should be victimized for joining or supporting KUSU.</span>
                             <span class="pill">➤ CRB listing on salary loans must follow due process.</span>
                             <span class="pill">➤ Dialogue first, intimidation never.</span>
                         </div>
 
-                        <p style="font-size:0.85rem;color:#4b5563;margin-top:0.8rem;">
+                        <p style="font-size:0.85rem;color:#4b5563;margin-top:0.8rem;position:relative;z-index:1;">
                             KUSU stands firmly that staff welfare, job security and dignity must be protected at all
                             times. Any violation of members’ rights will be challenged through the proper legal and
                             industrial relations channels.
                         </p>
+
+                        <!-- Optional hero image for union / staff -->
+                        <div class="hero-illustration" aria-hidden="true">
+                            <!-- Replace with your own group photo or union image -->
+                            <img src="images/kusu-hero.jpg" alt="" />
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
 
         <!-- About -->
-        <section id="about">
+        <section id="about" aria-labelledby="about-heading">
             <div class="container">
                 <div class="section-header">
                     <div class="section-kicker">About KUSU</div>
-                    <h2 class="section-title">Who we are and what we stand for</h2>
+                    <h2 id="about-heading" class="section-title">Who we are and what we stand for</h2>
                     <p class="section-subtitle">
                         KUSU is a registered trade union representing non-teaching staff in universities across Kenya,
                         championing social justice, decent work and fair treatment for all members.
@@ -1023,11 +1122,11 @@
         </section>
 
         <!-- Why Join -->
-        <section id="why-join">
+        <section id="why-join" aria-labelledby="why-heading">
             <div class="container">
                 <div class="section-header">
                     <div class="section-kicker">Why join KUSU</div>
-                    <h2 class="section-title">Your union. Your protection. Your power.</h2>
+                    <h2 id="why-heading" class="section-title">Your union. Your protection. Your power.</h2>
                     <p class="section-subtitle">
                         Being in a union is not a crime—it's a constitutional right. KUSU turns individual struggles
                         into a collective voice that management must respect.
@@ -1093,11 +1192,11 @@
         </section>
 
         <!-- Leadership -->
-        <section id="leadership">
+        <section id="leadership" aria-labelledby="leaders-heading">
             <div class="container">
                 <div class="section-header">
                     <div class="section-kicker">Leadership</div>
-                    <h2 class="section-title">National & Branch leadership</h2>
+                    <h2 id="leaders-heading" class="section-title">National & Branch leadership</h2>
                     <p class="section-subtitle">
                         KUSU is led by democratically elected officials at national and branch levels. Replace these
                         placeholders with your actual leaders and branches.
@@ -1153,11 +1252,11 @@
         </section>
 
         <!-- News & Updates -->
-        <section id="news">
+        <section id="news" aria-labelledby="news-heading">
             <div class="container">
                 <div class="section-header">
                     <div class="section-kicker">News & updates</div>
-                    <h2 class="section-title">Stay informed</h2>
+                    <h2 id="news-heading" class="section-title">Stay informed</h2>
                     <p class="section-subtitle">
                         Use this section to post official communication from KUSU—meeting notices, press statements,
                         circulars, branch updates and CBA progress.
@@ -1226,11 +1325,11 @@
         </section>
 
         <!-- Resources -->
-        <section id="resources">
+        <section id="resources" aria-labelledby="resources-heading">
             <div class="container">
                 <div class="section-header">
                     <div class="section-kicker">Resources</div>
-                    <h2 class="section-title">CBAs, policies & useful documents</h2>
+                    <h2 id="resources-heading" class="section-title">CBAs, policies & useful documents</h2>
                     <p class="section-subtitle">
                         Upload your CBAs, circulars, policies and forms and link them here so members can easily
                         download and reference them.
@@ -1282,12 +1381,12 @@
         </section>
 
         <!-- Membership -->
-        <section id="membership">
+        <section id="membership" aria-labelledby="membership-heading">
             <div class="container">
                 <div class="section-header">
                     <div class="section-kicker">Membership</div>
-                    <h2 class="section-title">How to join or update your details</h2>
-                <p class="section-subtitle">
+                    <h2 id="membership-heading" class="section-title">How to join or update your details</h2>
+                    <p class="section-subtitle">
                         Membership is voluntary and open to all non-teaching university staff who meet the
                         requirements. No member should be punished for joining a union.
                     </p>
@@ -1373,11 +1472,11 @@
         </section>
 
         <!-- Contact -->
-        <section id="contact">
+        <section id="contact" aria-labelledby="contact-heading">
             <div class="container">
                 <div class="section-header">
                     <div class="section-kicker">Contact</div>
-                    <h2 class="section-title">Talk to KUSU</h2>
+                    <h2 id="contact-heading" class="section-title">Talk to KUSU</h2>
                     <p class="section-subtitle">
                         Use the details below for official communication. Replace with your actual national and branch
                         contacts.
@@ -1446,7 +1545,7 @@
     </main>
 
     <!-- Footer -->
-    <footer>
+    <footer role="contentinfo">
         <div class="container">
             <div class="footer-grid">
                 <div class="footer-brand">
@@ -1484,17 +1583,24 @@
         </div>
     </footer>
 
+    <!-- Back to top button -->
+    <div class="back-to-top" id="backToTop">
+        <button type="button" aria-label="Back to top" onclick="scrollToSection('home')">
+            ↑ Top
+        </button>
+    </div>
+
     <!-- Floating WhatsApp demo -->
     <div class="whatsapp-float">
         <!-- Replace 07XXXXXXXX with your KUSU WhatsApp number -->
-        <a href="https://wa.me/2547XXXXXXXX" target="_blank" rel="noopener">
+        <a href="https://wa.me/2547XXXXXXXX" target="_blank" rel="noopener" aria-label="Chat with KUSU on WhatsApp">
             <span class="whatsapp-icon">✆</span>
             <span>Talk to KUSU</span>
         </a>
     </div>
 
     <script>
-        // Smooth scroll helper
+        // Smooth scroll helper (fallback for browsers without native smooth)
         function scrollToSection(id) {
             const el = document.getElementById(id);
             if (el) {
@@ -1508,13 +1614,15 @@
 
         if (navToggle) {
             navToggle.addEventListener("click", () => {
-                navMobile.classList.toggle("open");
+                const isOpen = navMobile.classList.toggle("open");
+                navToggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
             });
         }
 
         function closeMobile() {
             if (navMobile) {
                 navMobile.classList.remove("open");
+                navToggle.setAttribute("aria-expanded", "false");
             }
         }
 
@@ -1533,6 +1641,16 @@
 
         // Year
         document.getElementById("year").textContent = new Date().getFullYear();
+
+        // Back-to-top visibility
+        const backToTop = document.getElementById("backToTop");
+        window.addEventListener("scroll", () => {
+            if (window.scrollY > 400) {
+                backToTop.style.display = "block";
+            } else {
+                backToTop.style.display = "none";
+            }
+        });
     </script>
 </body>
 </html>
