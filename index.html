@@ -27,6 +27,10 @@
 
         *{margin:0;padding:0;box-sizing:border-box;}
 
+        html{
+            scroll-behavior:smooth;
+        }
+
         body{
             font-family:system-ui,Segoe UI,Arial;
             background:var(--bg);
@@ -37,6 +41,12 @@
         img{max-width:100%;display:block;}
 
         a{text-decoration:none;color:inherit;}
+
+        a:focus-visible,
+        button:focus-visible{
+            outline:2px solid var(--primary);
+            outline-offset:2px;
+        }
 
         header{
             position:sticky;top:0;z-index:100;
@@ -63,6 +73,7 @@
             justify-content:space-between;
             align-items:center;
             padding:12px 0;
+            gap:1rem;
         }
 
         .brand{
@@ -92,6 +103,27 @@
         .nav-links{
             display:flex;
             gap:20px;
+            font-size:0.95rem;
+        }
+
+        .nav-links a{
+            position:relative;
+            padding-bottom:2px;
+        }
+
+        .nav-links a::after{
+            content:"";
+            position:absolute;
+            left:0;
+            bottom:0;
+            width:0;
+            height:2px;
+            background:var(--primary);
+            transition:width .2s ease-in-out;
+        }
+
+        .nav-links a:hover::after{
+            width:100%;
         }
 
         .btn{
@@ -112,6 +144,56 @@
             background:white;
             border:1px solid var(--primary);
             color:var(--primary);
+        }
+
+        .nav-right{
+            display:flex;
+            align-items:center;
+            gap:0.75rem;
+        }
+
+        /* MOBILE NAV TOGGLE */
+        .nav-toggle{
+            display:none;
+            flex-direction:column;
+            gap:4px;
+            cursor:pointer;
+        }
+
+        .nav-toggle span{
+            width:20px;
+            height:2px;
+            border-radius:999px;
+            background:#111827;
+        }
+
+        .nav-mobile{
+            display:none;
+            background:white;
+            box-shadow:0 8px 20px rgba(0,0,0,0.12);
+        }
+
+        .nav-mobile.open{
+            display:block;
+        }
+
+        .nav-mobile-inner{
+            padding:10px 20px 18px;
+            display:flex;
+            flex-direction:column;
+            gap:10px;
+            font-size:0.95rem;
+        }
+
+        @media(max-width:850px){
+            .nav-links,
+            .nav-right .btn-outline,
+            .nav-right .btn-primary{
+                display:none;
+            }
+            .nav-toggle{
+                display:flex;
+            }
         }
 
         /* HERO */
@@ -246,6 +328,63 @@
             color:#bbd0ff;
         }
 
+        /* FLOATING WHATSAPP */
+        .whatsapp-float{
+            position:fixed;
+            right:16px;
+            bottom:16px;
+            z-index:120;
+        }
+
+        .whatsapp-float a{
+            display:flex;
+            align-items:center;
+            gap:6px;
+            padding:8px 14px;
+            border-radius:999px;
+            background:#22c55e;
+            color:white;
+            font-size:13px;
+            font-weight:600;
+            box-shadow:0 10px 20px rgba(34,197,94,0.4);
+        }
+
+        .whatsapp-icon{
+            width:20px;
+            height:20px;
+            border-radius:50%;
+            border:1px solid rgba(255,255,255,.6);
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            font-size:13px;
+        }
+
+        @media(max-width:480px){
+            .whatsapp-float span.label{
+                display:none;
+            }
+        }
+
+        /* BACK TO TOP */
+        .back-to-top{
+            position:fixed;
+            right:16px;
+            bottom:70px;
+            display:none;
+            z-index:110;
+        }
+
+        .back-to-top button{
+            border:none;
+            border-radius:999px;
+            background:var(--primary);
+            color:white;
+            padding:6px 10px;
+            font-size:12px;
+            cursor:pointer;
+            box-shadow:0 10px 20px rgba(0,82,204,0.4);
+        }
     </style>
 </head>
 
@@ -259,21 +398,45 @@
     <!-- NAVBAR -->
     <header>
         <div class="container nav">
-            <div class="brand">
+            <a href="#home" class="brand">
                 <img src="kusu-logo.png" alt="KUSU Logo">
                 <div>
                     <div class="brand-title">KUSU</div>
                     <div class="brand-sub">Kenya University Staff Union</div>
                 </div>
-            </div>
+            </a>
 
-            <nav class="nav-links">
+            <nav class="nav-links" aria-label="Main navigation">
                 <a href="#about">About</a>
                 <a href="#why">Why Join</a>
                 <a href="#leaders">Leadership</a>
                 <a href="#news">News</a>
                 <a href="#contact">Contact</a>
             </nav>
+
+            <div class="nav-right">
+                <button class="btn btn-outline" onclick="document.querySelector('#contact').scrollIntoView({behavior:'smooth'})">
+                    Contact
+                </button>
+                <button class="btn btn-primary" onclick="document.querySelector('#why').scrollIntoView({behavior:'smooth'})">
+                    Join KUSU
+                </button>
+
+                <button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false">
+                    <span></span><span></span><span></span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile menu -->
+        <div class="nav-mobile" id="navMobile">
+            <div class="nav-mobile-inner">
+                <a href="#about" onclick="closeMobile()">About</a>
+                <a href="#why" onclick="closeMobile()">Why Join</a>
+                <a href="#leaders" onclick="closeMobile()">Leadership</a>
+                <a href="#news" onclick="closeMobile()">News</a>
+                <a href="#contact" onclick="closeMobile()">Contact</a>
+            </div>
         </div>
     </header>
 
@@ -282,10 +445,17 @@
         <div class="container hero-grid">
             <div>
                 <h1 class="hero-title">Stronger Together — United for Dignity, Justice & Fair Work</h1>
-                <p class="hero-sub">KUSU empowers non-teaching university staff in Kenya, ensuring better working conditions, fair treatment, legal protection and a united voice.</p>
+                <p class="hero-sub">
+                    KUSU empowers non-teaching university staff in Kenya, ensuring better working conditions,
+                    fair treatment, legal protection and a united voice.
+                </p>
 
-                <button class="btn btn-primary">Join KUSU Today</button>
-                <button class="btn btn-outline">Latest Updates</button>
+                <button class="btn btn-primary" onclick="document.querySelector('#why').scrollIntoView({behavior:'smooth'})">
+                    Join KUSU Today
+                </button>
+                <button class="btn btn-outline" onclick="document.querySelector('#news').scrollIntoView({behavior:'smooth'})">
+                    Latest Updates
+                </button>
             </div>
 
             <div class="hero-card">
@@ -301,7 +471,10 @@
     <section id="about">
         <div class="container">
             <h2 class="section-title">About KUSU</h2>
-            <p class="section-sub">KUSU represents non-teaching staff in Kenyan universities — ICT, Administration, Library, Technical, Drivers, Security & Support Staff.</p>
+            <p class="section-sub">
+                KUSU represents non-teaching staff in Kenyan universities — ICT, Administration, Library, Technical,
+                Drivers, Security & Support Staff.
+            </p>
 
             <div class="grid-3">
                 <div class="card">
@@ -355,7 +528,7 @@
     <section id="leaders">
         <div class="container">
             <h2 class="section-title">Leadership</h2>
-            <p class="section-sub">Replace with real office bearers.</p>
+            <p class="section-sub">Replace the placeholders below with real office bearers.</p>
 
             <div class="grid-4">
                 <div class="card">
@@ -443,8 +616,46 @@
         </div>
     </footer>
 
+    <!-- BACK TO TOP -->
+    <div class="back-to-top" id="backToTop">
+        <button type="button" onclick="document.querySelector('#home').scrollIntoView({behavior:'smooth'})">
+            ↑ Top
+        </button>
+    </div>
+
+    <!-- FLOATING WHATSAPP (PUT REAL NUMBER) -->
+    <div class="whatsapp-float">
+        <a href="https://wa.me/2547XXXXXXXX" target="_blank" rel="noopener">
+            <span class="whatsapp-icon">✆</span>
+            <span class="label">Talk to KUSU</span>
+        </a>
+    </div>
+
     <script>
+        // year
         document.getElementById("year").innerText = new Date().getFullYear();
+
+        // mobile menu
+        const navToggle = document.getElementById("navToggle");
+        const navMobile = document.getElementById("navMobile");
+
+        if(navToggle){
+            navToggle.addEventListener("click", () => {
+                const open = navMobile.classList.toggle("open");
+                navToggle.setAttribute("aria-expanded", open ? "true" : "false");
+            });
+        }
+
+        function closeMobile(){
+            navMobile.classList.remove("open");
+            navToggle.setAttribute("aria-expanded","false");
+        }
+
+        // back to top visibility
+        const backToTop = document.getElementById("backToTop");
+        window.addEventListener("scroll", () => {
+            backToTop.style.display = window.scrollY > 400 ? "block" : "none";
+        });
     </script>
 
 </body>
