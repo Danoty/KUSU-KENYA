@@ -152,6 +152,7 @@
         0 0 8px rgba(56,189,248,.6),
         0 0 16px rgba(236,72,153,.4);
       position:relative;
+      animation:logoGlow 3s ease-in-out infinite;
     }
     .brand-logo-inner{
       width:100%;
@@ -173,9 +174,6 @@
       0%{box-shadow:0 0 8px rgba(56,189,248,.5),0 0 16px rgba(236,72,153,.3);}
       50%{box-shadow:0 0 14px rgba(56,189,248,.9),0 0 26px rgba(236,72,153,.6);}
       100%{box-shadow:0 0 8px rgba(56,189,248,.5),0 0 16px rgba(236,72,153,.3);}
-    }
-    .brand-logo{
-      animation:logoGlow 3s ease-in-out infinite;
     }
 
     .brand-text-main{
@@ -595,9 +593,6 @@
       display:flex;
       align-items:center;
       justify-content:center;
-      font-weight:700;
-      font-size:17px;
-      color:#0f172a;
       box-shadow:0 10px 25px rgba(148,163,184,.7);
     }
     .leader-inner{
@@ -608,6 +603,16 @@
       display:flex;
       align-items:center;
       justify-content:center;
+      font-weight:700;
+      font-size:17px;
+      color:#0f172a;
+      overflow:hidden;
+    }
+    .leader-inner.leader-photo img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      border-radius:999px;
     }
     .leader-name{
       text-align:center;
@@ -653,6 +658,75 @@
     }
     .member-list li{
       margin-bottom:2px;
+    }
+
+    /* Media section */
+    .media-grid{
+      display:grid;
+      grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);
+      gap:20px;
+    }
+    @media(max-width:950px){
+      .media-grid{grid-template-columns:minmax(0,1fr);}
+    }
+    .video-card{
+      border-radius:var(--radius-lg);
+      overflow:hidden;
+      background:#000;
+      box-shadow:var(--shadow-soft);
+    }
+    .video-card video{
+      width:100%;
+      display:block;
+    }
+    .video-caption{
+      padding:10px 12px;
+      font-size:12px;
+      color:var(--text-soft);
+      background:linear-gradient(90deg,rgba(15,23,42,.9),rgba(30,64,175,.9));
+      color:#e5e7eb;
+    }
+
+    /* Gallery */
+    .gallery-grid{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:10px;
+    }
+    @media(max-width:900px){
+      .gallery-grid{grid-template-columns:repeat(3,minmax(0,1fr));}
+    }
+    @media(max-width:640px){
+      .gallery-grid{grid-template-columns:repeat(2,minmax(0,1fr));}
+    }
+    .gallery-item{
+      position:relative;
+      border-radius:14px;
+      overflow:hidden;
+      box-shadow:0 10px 20px rgba(15,23,42,.24);
+      cursor:pointer;
+      isolation:isolate;
+    }
+    .gallery-item img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      transition:transform .4s ease,filter .4s ease;
+    }
+    .gallery-item::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:linear-gradient(145deg,rgba(15,23,42,.1),rgba(236,72,153,.25));
+      opacity:0;
+      transition:opacity .3s ease;
+    }
+    .gallery-item:hover img{
+      transform:scale(1.06);
+      filter:brightness(1.1);
+    }
+    .gallery-item:hover::after{
+      opacity:1;
     }
 
     /* News */
@@ -908,6 +982,7 @@
         <a href="#why-join">Why Join</a>
         <a href="#members">Member Universities</a>
         <a href="#leaders">Leadership</a>
+        <a href="#media">Media</a>
         <a href="#news">News</a>
         <a href="#faq">FAQ</a>
         <a href="#contact">Contact</a>
@@ -939,6 +1014,7 @@
         <a href="#why-join" onclick="closeMobile()">Why Join</a>
         <a href="#members" onclick="closeMobile()">Member Universities</a>
         <a href="#leaders" onclick="closeMobile()">Leadership</a>
+        <a href="#media" onclick="closeMobile()">Media</a>
         <a href="#news" onclick="closeMobile()">News</a>
         <a href="#faq" onclick="closeMobile()">FAQ</a>
         <a href="#contact" onclick="closeMobile()">Contact</a>
@@ -1139,8 +1215,7 @@
           <h2 class="section-title">All public universities &amp; constituent colleges</h2>
           <p class="section-sub">
             KUSU organises workers across public universities and recognised public constituent colleges in Kenya.
-            Below is the current landscape of public institutions authorised to operate by the Commission for
-            University Education (CUE). :contentReference[oaicite:1]{index=1}
+            (List can be updated as CUE issues new charters.)
           </p>
         </div>
 
@@ -1198,7 +1273,7 @@
             </ul>
             <p style="margin-top:8px;font-size:11px;color:var(--text-soft);">
               These constituent colleges are attached to parent public universities and are also part of the
-              wider public university ecosystem. :contentReference[oaicite:2]{index=2}
+              wider public university ecosystem.
             </p>
           </div>
         </div>
@@ -1220,9 +1295,11 @@
         <div class="grid-4">
           <div class="card">
             <div class="leader-img">
-              <div class="leader-inner">SG</div>
+              <div class="leader-inner leader-photo">
+                <img src="SG-passport.jpg" alt="Secretary General">
+              </div>
             </div>
-            <div class="leader-name">Dr. Charles Mukhwaya</div>
+            <div class="leader-name">Name Here</div>
             <div class="leader-role">Secretary General – National Office</div>
           </div>
 
@@ -1230,7 +1307,7 @@
             <div class="leader-img">
               <div class="leader-inner">CH</div>
             </div>
-            <div class="leader-name">Dr. Philip Onyango</div>
+            <div class="leader-name">Name Here</div>
             <div class="leader-role">Chairperson – National Office</div>
           </div>
 
@@ -1238,7 +1315,7 @@
             <div class="leader-img">
               <div class="leader-inner">TR</div>
             </div>
-            <div class="leader-name">Eng. James Makori</div>
+            <div class="leader-name">Name Here</div>
             <div class="leader-role">National Treasurer</div>
           </div>
 
@@ -1246,7 +1323,7 @@
             <div class="leader-img">
               <div class="leader-inner">OS</div>
             </div>
-            <div class="leader-name">Earnest Wayaya</div>
+            <div class="leader-name">Name Here</div>
             <div class="leader-role">Organising Secretary</div>
           </div>
         </div>
@@ -1260,6 +1337,71 @@
             <li>KUSU – Moi University Branch</li>
             <li>KUSU – [Your University] Branch</li>
           </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- MEDIA (VIDEOS + GALLERY) -->
+    <section id="media">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-kicker">Media</div>
+          <h2 class="section-title">Voices, moments &amp; solidarity in action</h2>
+          <p class="section-sub">
+            Real people. Real stories. Use this space to showcase KUSU activities, meetings, marches,
+            trainings and member experiences.
+          </p>
+        </div>
+
+        <div class="media-grid">
+          <!-- Videos -->
+          <div>
+            <div class="video-card" style="margin-bottom:14px;">
+              <video src="vid1.mp4" controls></video>
+              <div class="video-caption">
+                KUSU message to members &mdash; leadership speaking directly to staff.
+              </div>
+            </div>
+
+            <div class="video-card">
+              <video src="vid2.mp4" controls></video>
+              <div class="video-caption">
+                Highlight of a KUSU engagement / meeting session with members.
+              </div>
+            </div>
+          </div>
+
+          <!-- Photo gallery -->
+          <div class="card">
+            <h3 style="font-size:15px;margin-bottom:8px;">Photo highlights</h3>
+            <p style="font-size:12px;color:var(--text-soft);margin-bottom:10px;">
+              Moments from KUSU events, meetings and member interactions. Replace descriptions according
+              to each picture.
+            </p>
+            <div class="gallery-grid">
+              <div class="gallery-item">
+                <img src="1.jpg" alt="KUSU event photo 1">
+              </div>
+              <div class="gallery-item">
+                <img src="2.jpg" alt="KUSU event photo 2">
+              </div>
+              <div class="gallery-item">
+                <img src="3.jpg" alt="KUSU event photo 3">
+              </div>
+              <div class="gallery-item">
+                <img src="4.jpg" alt="KUSU event photo 4">
+              </div>
+              <div class="gallery-item">
+                <img src="5.jpg" alt="KUSU event photo 5">
+              </div>
+              <div class="gallery-item">
+                <img src="6.jpg" alt="KUSU event photo 6">
+              </div>
+              <div class="gallery-item">
+                <img src="7.jpg" alt="KUSU event photo 7">
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -1464,6 +1606,7 @@
             <li><a href="#why-join">Why Join</a></li>
             <li><a href="#members">Member Universities</a></li>
             <li><a href="#leaders">Leadership</a></li>
+            <li><a href="#media">Media</a></li>
             <li><a href="#news">News &amp; Updates</a></li>
           </ul>
         </div>
