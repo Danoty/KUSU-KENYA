@@ -21,7 +21,8 @@
       --primary-dark:#003b99;
       --primary-soft:#e3edff;
       --accent:#22c55e;
-      --danger:#dc2626;
+      --accent-pink:#ec4899;
+      --accent-soft:#fce7f3;
 
       --bg:#f4f6fb;
       --bg-elevated:#ffffff;
@@ -94,7 +95,7 @@
 
     /* Top bar */
     .topbar{
-      background:var(--primary-dark);
+      background:linear-gradient(90deg, #0f172a, #1d4ed8, #db2777);
       color:#e5e7eb;
       font-size:13px;
       padding:6px 0;
@@ -119,11 +120,13 @@
       top:0;
       z-index:120;
       background:rgba(255,255,255,.96);
-      backdrop-filter:blur(10px);
-      box-shadow:0 1px 12px rgba(15,23,42,.08);
+      backdrop-filter:blur(14px);
+      box-shadow:0 1px 12px rgba(15,23,42,.11);
+      border-bottom:1px solid rgba(148,163,184,.25);
     }
     .dark header{
       background:rgba(2,6,23,.97);
+      border-bottom-color:rgba(15,23,42,.9);
     }
 
     .nav{
@@ -140,28 +143,52 @@
       gap:10px;
     }
     .brand-logo{
-      width:44px;
-      height:44px;
-      border-radius:50%;
-      border:2px solid var(--primary);
-      box-shadow:0 0 0 3px rgba(0,82,204,.25);
-      overflow:hidden;
+      width:46px;
+      height:46px;
+      border-radius:18px;
+      padding:2px;
+      background:conic-gradient(from 120deg,#38bdf8,#ec4899,#6366f1,#38bdf8);
+      box-shadow:
+        0 0 8px rgba(56,189,248,.6),
+        0 0 16px rgba(236,72,153,.4);
+      position:relative;
     }
-    .brand-logo img{
+    .brand-logo-inner{
+      width:100%;
+      height:100%;
+      border-radius:14px;
+      background:#fff;
+      overflow:hidden;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+    .brand-logo-inner img{
       width:100%;
       height:100%;
       object-fit:cover;
     }
+
+    @keyframes logoGlow {
+      0%{box-shadow:0 0 8px rgba(56,189,248,.5),0 0 16px rgba(236,72,153,.3);}
+      50%{box-shadow:0 0 14px rgba(56,189,248,.9),0 0 26px rgba(236,72,153,.6);}
+      100%{box-shadow:0 0 8px rgba(56,189,248,.5),0 0 16px rgba(236,72,153,.3);}
+    }
+    .brand-logo{
+      animation:logoGlow 3s ease-in-out infinite;
+    }
+
     .brand-text-main{
       font-size:20px;
-      font-weight:700;
+      font-weight:800;
+      letter-spacing:.08em;
     }
     .brand-text-sub{
       font-size:11px;
       color:var(--text-soft);
       margin-top:-3px;
       text-transform:uppercase;
-      letter-spacing:.08em;
+      letter-spacing:.1em;
     }
 
     .nav-links{
@@ -172,20 +199,31 @@
     }
     .nav-links a{
       position:relative;
-      padding-bottom:2px;
+      padding:6px 10px;
+      border-radius:999px;
+      transition:background var(--transition-fast),color var(--transition-fast),transform var(--transition-fast),box-shadow var(--transition-fast);
     }
     .nav-links a::after{
       content:"";
       position:absolute;
-      left:0;
-      bottom:0;
-      width:0;
+      left:12px;
+      right:12px;
+      bottom:4px;
       height:2px;
-      background:var(--primary);
-      transition:width var(--transition-fast);
+      border-radius:999px;
+      background:linear-gradient(90deg,#38bdf8,#ec4899);
+      opacity:0;
+      transform:scaleX(0.6);
+      transition:opacity var(--transition-fast),transform var(--transition-fast);
+    }
+    .nav-links a:hover{
+      background:rgba(191,219,254,.8);
+      box-shadow:0 6px 16px rgba(59,130,246,.35);
+      transform:translateY(-1px);
     }
     .nav-links a:hover::after{
-      width:100%;
+      opacity:1;
+      transform:scaleX(1);
     }
 
     .nav-right{
@@ -213,22 +251,23 @@
       white-space:nowrap;
     }
     .btn-primary{
-      background:linear-gradient(135deg,var(--primary),var(--primary-dark));
+      background:linear-gradient(135deg,#0ea5e9,#6366f1,#ec4899);
       color:#fff;
-      box-shadow:0 10px 22px rgba(0,82,204,.35);
+      box-shadow:0 10px 22px rgba(59,130,246,.5);
     }
     .btn-primary:hover{
       transform:translateY(-1px);
-      box-shadow:0 14px 28px rgba(0,82,204,.45);
+      box-shadow:0 14px 30px rgba(59,130,246,.7);
     }
     .btn-outline{
       background:transparent;
-      border:1px solid var(--border);
+      border:1px solid rgba(148,163,184,.7);
       color:var(--primary-dark);
     }
     .btn-outline:hover{
-      background:var(--primary);
-      color:#fff;
+      background:rgba(219,234,254,.9);
+      color:#0f172a;
+      box-shadow:0 10px 24px rgba(148,163,184,.55);
     }
     .btn-small{
       padding:6px 12px;
@@ -250,10 +289,10 @@
     .theme-toggle span{
       padding:3px 6px;
       border-radius:999px;
-      opacity:.6;
+      opacity:.5;
     }
     .theme-toggle span.active{
-      background:var(--primary);
+      background:linear-gradient(120deg,#38bdf8,#ec4899);
       color:#fff;
       opacity:1;
     }
@@ -291,6 +330,9 @@
       gap:10px;
       font-size:14px;
     }
+    .nav-mobile-inner a{
+      padding:6px 0;
+    }
 
     @media(max-width:900px){
       .nav-links,
@@ -307,14 +349,14 @@
     .hero{
       padding:60px 0 45px;
       background:
-        radial-gradient(circle at 0 0,#dbeafe 0,transparent 50%),
-        radial-gradient(circle at 100% 0,#e0f2fe 0,transparent 55%),
-        linear-gradient(to bottom,#f8fafc,transparent 40%);
+        radial-gradient(circle at 0 0,#dbeafe 0,transparent 55%),
+        radial-gradient(circle at 100% 0,#fce7f3 0,transparent 55%),
+        linear-gradient(to bottom,#f9fafb,#eff6ff 50%,#fdf2ff);
     }
     .dark .hero{
       background:
         radial-gradient(circle at 0 0,#0f172a 0,transparent 55%),
-        radial-gradient(circle at 100% 0,#020617 0,transparent 70%);
+        radial-gradient(circle at 100% 0,#111827 0,transparent 70%);
     }
 
     .hero-grid{
@@ -333,7 +375,8 @@
       gap:6px;
       padding:4px 10px;
       border-radius:var(--radius-pill);
-      background:var(--primary-soft);
+      background:linear-gradient(120deg,rgba(56,189,248,.12),rgba(236,72,153,.12));
+      border:1px solid rgba(129,140,248,.35);
       font-size:11px;
       font-weight:600;
       letter-spacing:.08em;
@@ -342,16 +385,20 @@
       color:var(--primary-dark);
     }
     .hero-dot{
-      width:8px;height:8px;border-radius:999px;background:var(--accent);
+      width:8px;height:8px;border-radius:999px;
+      background:radial-gradient(circle,#22c55e,#16a34a);
+      box-shadow:0 0 8px rgba(34,197,94,.7);
     }
 
     .hero-title{
-      font-size:clamp(2.1rem,3vw + 1rem,2.8rem);
+      font-size:clamp(2.15rem,3vw + 1rem,2.9rem);
       line-height:1.15;
       margin-bottom:10px;
     }
     .hero-title span{
-      color:var(--primary-dark);
+      background:linear-gradient(120deg,#0ea5e9,#6366f1,#ec4899);
+      -webkit-background-clip:text;
+      color:transparent;
     }
 
     .hero-sub{
@@ -366,6 +413,10 @@
       flex-wrap:wrap;
       gap:10px;
       margin-bottom:16px;
+    }
+
+    .hero-actions .btn-outline{
+      border-color:rgba(236,72,153,.55);
     }
 
     .hero-meta{
@@ -388,13 +439,16 @@
       box-shadow:var(--shadow-soft);
       position:relative;
       overflow:hidden;
+      border:1px solid rgba(191,219,254,.8);
     }
     .hero-card::before{
       content:"";
       position:absolute;
-      inset:0;
+      inset:-40%;
       background:
-        radial-gradient(circle at 100% 0,rgba(0,82,204,.18),transparent 55%);
+        radial-gradient(circle at 0 0,rgba(56,189,248,.22),transparent 60%),
+        radial-gradient(circle at 100% 100%,rgba(236,72,153,.24),transparent 55%);
+      opacity:.9;
       pointer-events:none;
     }
     .hero-card-content{position:relative;z-index:1;}
@@ -429,6 +483,9 @@
     .stat-number{
       font-size:18px;
       font-weight:700;
+      background:linear-gradient(120deg,#0ea5e9,#ec4899);
+      -webkit-background-clip:text;
+      color:transparent;
     }
     .stat-label{
       color:var(--text-soft);
@@ -463,6 +520,11 @@
     .section-title{
       font-size:24px;
       margin-bottom:4px;
+    }
+    .section-title span{
+      background:linear-gradient(120deg,#38bdf8,#ec4899);
+      -webkit-background-clip:text;
+      color:transparent;
     }
     .section-sub{
       font-size:14px;
@@ -506,7 +568,8 @@
       width:34px;
       height:34px;
       border-radius:50%;
-      background:var(--primary-soft);
+      background:radial-gradient(circle,#dbeafe,#fce7f3);
+      border:1px solid rgba(129,140,248,.4);
       display:flex;
       align-items:center;
       justify-content:center;
@@ -528,13 +591,23 @@
       height:64px;
       border-radius:50%;
       margin:0 auto 8px;
-      background:linear-gradient(135deg,#dbeafe,#bfdbfe);
+      background:conic-gradient(from 210deg,#38bdf8,#ec4899,#6366f1,#38bdf8);
       display:flex;
       align-items:center;
       justify-content:center;
       font-weight:700;
       font-size:17px;
-      color:var(--primary-dark);
+      color:#0f172a;
+      box-shadow:0 10px 25px rgba(148,163,184,.7);
+    }
+    .leader-inner{
+      width:88%;
+      height:88%;
+      border-radius:999px;
+      background:#f9fafb;
+      display:flex;
+      align-items:center;
+      justify-content:center;
     }
     .leader-name{
       text-align:center;
@@ -545,6 +618,41 @@
       text-align:center;
       font-size:12px;
       color:var(--text-soft);
+    }
+
+    /* Member universities */
+    .member-grid{
+      display:grid;
+      grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);
+      gap:20px;
+    }
+    @media(max-width:950px){
+      .member-grid{grid-template-columns:minmax(0,1fr);}
+    }
+    .member-list{
+      max-height:260px;
+      overflow:auto;
+      padding-right:8px;
+      scrollbar-width:thin;
+    }
+    .member-list::-webkit-scrollbar{
+      width:6px;
+    }
+    .member-list::-webkit-scrollbar-thumb{
+      background:#9ca3af;
+      border-radius:999px;
+    }
+    .member-list h3{
+      font-size:14px;
+      margin-bottom:4px;
+    }
+    .member-list ul{
+      font-size:12px;
+      color:var(--text-soft);
+      padding-left:18px;
+    }
+    .member-list li{
+      margin-bottom:2px;
     }
 
     /* News */
@@ -723,12 +831,12 @@
     .back-to-top button{
       border:none;
       border-radius:999px;
-      background:var(--primary);
+      background:linear-gradient(120deg,#0ea5e9,#ec4899);
       color:#fff;
       padding:6px 11px;
       font-size:11px;
       cursor:pointer;
-      box-shadow:0 10px 20px rgba(0,82,204,.45);
+      box-shadow:0 10px 20px rgba(59,130,246,.55);
     }
 
     /* WhatsApp */
@@ -774,8 +882,8 @@
     <div class="container topbar-inner">
       <span>✊ Defending university workers' rights • Promoting decent work • Protecting staff dignity</span>
       <div class="topbar-right">
-        <span>Article 41 – Labour Rights</span>
-        <span>Labour Relations Act</span>
+        <span>Article 36 &amp; 41 – Constitution of Kenya</span>
+        <span>Labour Relations Act – Union Rights</span>
       </div>
     </div>
   </div>
@@ -785,7 +893,9 @@
     <div class="container nav">
       <a href="#home" class="brand" aria-label="KUSU home">
         <div class="brand-logo">
-          <img src="kusu-logo.png" alt="KUSU Logo">
+          <div class="brand-logo-inner">
+            <img src="kusu-logo.png" alt="KUSU Logo">
+          </div>
         </div>
         <div>
           <div class="brand-text-main">KUSU</div>
@@ -796,6 +906,7 @@
       <nav class="nav-links" aria-label="Main navigation">
         <a href="#about">About</a>
         <a href="#why-join">Why Join</a>
+        <a href="#members">Member Universities</a>
         <a href="#leaders">Leadership</a>
         <a href="#news">News</a>
         <a href="#faq">FAQ</a>
@@ -826,6 +937,7 @@
       <div class="nav-mobile-inner">
         <a href="#about" onclick="closeMobile()">About</a>
         <a href="#why-join" onclick="closeMobile()">Why Join</a>
+        <a href="#members" onclick="closeMobile()">Member Universities</a>
         <a href="#leaders" onclick="closeMobile()">Leadership</a>
         <a href="#news" onclick="closeMobile()">News</a>
         <a href="#faq" onclick="closeMobile()">FAQ</a>
@@ -890,16 +1002,16 @@
 
             <div class="stats" id="stats">
               <div class="stat-item">
-                <div class="stat-number" data-target="47">0</div>
-                <div class="stat-label">Universities &amp; campuses</div>
+                <div class="stat-number" data-target="40">0</div>
+                <div class="stat-label">Public Universities</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-number" data-target="5">0</div>
+                <div class="stat-label">Public Constituent Colleges</div>
               </div>
               <div class="stat-item">
                 <div class="stat-number" data-target="15000">0</div>
                 <div class="stat-label">Workers represented (and growing)</div>
-              </div>
-              <div class="stat-item">
-                <div class="stat-number" data-target="6">0</div>
-                <div class="stat-label">Collective Bargaining Agreements</div>
               </div>
             </div>
           </div>
@@ -954,7 +1066,7 @@
       <div class="container">
         <div class="section-header">
           <div class="section-kicker">Why join KUSU</div>
-          <h2 class="section-title">Your union. Your protection. Your power.</h2>
+          <h2 class="section-title">Your union. Your protection. <span>Your power.</span></h2>
           <p class="section-sub">
             Being in a union is a constitutional right. KUSU turns individual struggles
             into a collective voice that management must respect.
@@ -1019,6 +1131,80 @@
       </div>
     </section>
 
+    <!-- MEMBER UNIVERSITIES -->
+    <section id="members">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-kicker">Member Universities</div>
+          <h2 class="section-title">All public universities &amp; constituent colleges</h2>
+          <p class="section-sub">
+            KUSU organises workers across public universities and recognised public constituent colleges in Kenya.
+            Below is the current landscape of public institutions authorised to operate by the Commission for
+            University Education (CUE). :contentReference[oaicite:1]{index=1}
+          </p>
+        </div>
+
+        <div class="member-grid">
+          <div class="card member-list">
+            <h3>Public Universities</h3>
+            <ul>
+              <li>University of Nairobi</li>
+              <li>Moi University</li>
+              <li>Kenyatta University</li>
+              <li>Egerton University</li>
+              <li>Jomo Kenyatta University of Agriculture and Technology</li>
+              <li>Maseno University</li>
+              <li>Masinde Muliro University of Science and Technology</li>
+              <li>Technical University of Kenya</li>
+              <li>Technical University of Mombasa</li>
+              <li>Dedan Kimathi University of Technology</li>
+              <li>Chuka University</li>
+              <li>Pwani University</li>
+              <li>Kisii University</li>
+              <li>Laikipia University</li>
+              <li>South Eastern Kenya University</li>
+              <li>Multimedia University of Kenya</li>
+              <li>University of Kabianga</li>
+              <li>Karatina University</li>
+              <li>Meru University of Science and Technology</li>
+              <li>Kirinyaga University</li>
+              <li>Murang'a University of Technology</li>
+              <li>Machakos University</li>
+              <li>University of Eldoret</li>
+              <li>Kibabii University</li>
+              <li>Maasai Mara University</li>
+              <li>The Co-operative University of Kenya</li>
+              <li>Rongo University</li>
+              <li>Garissa University</li>
+              <li>Jaramogi Oginga Odinga University of Science and Technology</li>
+              <li>Taita Taveta University</li>
+              <li>Tharaka University</li>
+              <li>University of Embu</li>
+              <li>National Defence University - Kenya</li>
+              <li>Open University of Kenya</li>
+              <li>Kaimosi Friends University</li>
+              <li>National Intelligence and Research University</li>
+            </ul>
+          </div>
+
+          <div class="card member-list">
+            <h3>Public University Constituent Colleges</h3>
+            <ul>
+              <li>Turkana University College</li>
+              <li>Bomet University College</li>
+              <li>Koitaleel Samoei University College</li>
+              <li>Mama Ngina University College</li>
+              <li>Kenya Advanced Institute of Science and Technology (KAIST)</li>
+            </ul>
+            <p style="margin-top:8px;font-size:11px;color:var(--text-soft);">
+              These constituent colleges are attached to parent public universities and are also part of the
+              wider public university ecosystem. :contentReference[oaicite:2]{index=2}
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- LEADERSHIP -->
     <section id="leaders">
       <div class="container">
@@ -1033,26 +1219,34 @@
 
         <div class="grid-4">
           <div class="card">
-            <div class="leader-img">SG</div>
-            <div class="leader-name">Dr. Charles Mukhwaya</div>
+            <div class="leader-img">
+              <div class="leader-inner">SG</div>
+            </div>
+            <div class="leader-name">Name Here</div>
             <div class="leader-role">Secretary General – National Office</div>
           </div>
 
           <div class="card">
-            <div class="leader-img">CH</div>
-            <div class="leader-name">Dr. Philip Onyango</div>
+            <div class="leader-img">
+              <div class="leader-inner">CH</div>
+            </div>
+            <div class="leader-name">Name Here</div>
             <div class="leader-role">Chairperson – National Office</div>
           </div>
 
           <div class="card">
-            <div class="leader-img">TR</div>
-            <div class="leader-name">Eng. James Makori</div>
+            <div class="leader-img">
+              <div class="leader-inner">TR</div>
+            </div>
+            <div class="leader-name">Name Here</div>
             <div class="leader-role">National Treasurer</div>
           </div>
 
           <div class="card">
-            <div class="leader-img">OS</div>
-            <div class="leader-name">Earnest Wayaya</div>
+            <div class="leader-img">
+              <div class="leader-inner">OS</div>
+            </div>
+            <div class="leader-name">Name Here</div>
             <div class="leader-role">Organising Secretary</div>
           </div>
         </div>
@@ -1268,6 +1462,7 @@
           <ul class="footer-links">
             <li><a href="#about">About KUSU</a></li>
             <li><a href="#why-join">Why Join</a></li>
+            <li><a href="#members">Member Universities</a></li>
             <li><a href="#leaders">Leadership</a></li>
             <li><a href="#news">News &amp; Updates</a></li>
           </ul>
@@ -1405,7 +1600,6 @@
     if (savedTheme) {
       applyTheme(savedTheme);
     } else {
-      // default light
       applyTheme("light");
     }
 
