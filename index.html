@@ -16,21 +16,29 @@
   <link rel="icon" href="kusu-logo.png" type="image/png" />
 
   <style>
-    /* ========== VARIABLES / THEME ========== */
     :root {
       --primary:#0052cc;
+      --primary-dark:#003b99;
+      --primary-soft:#e3edff;
+      --accent:#22c55e;
       --accent-pink:#ec4899;
+      --accent-soft:#fce7f3;
+
       --bg:#f4f6fb;
       --bg-elevated:#ffffff;
       --bg-soft:#e5edff;
       --text:#0f172a;
       --text-soft:#64748b;
       --border:#d0d7e2;
+
       --shadow-soft:0 10px 25px rgba(15,23,42,.08);
       --radius-lg:16px;
       --radius-pill:999px;
       --transition-fast:.18s ease-in-out;
+      --transition-med:.25s ease-in-out;
     }
+
+    /* Dark mode variables */
     .dark {
       --bg:#020617;
       --bg-elevated:#020617;
@@ -38,209 +46,1001 @@
       --text:#e5e7eb;
       --text-soft:#9ca3af;
       --border:#1f2937;
+      --primary-soft:#02091b;
       --shadow-soft:0 18px 45px rgba(15,23,42,.8);
     }
 
     *{margin:0;padding:0;box-sizing:border-box;}
+
     html{scroll-behavior:smooth;}
+
     body{
       font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
       background:var(--bg);
       color:var(--text);
       line-height:1.6;
     }
-    img, video{max-width:100%;display:block;}
+
+    img{max-width:100%;display:block;}
     a{text-decoration:none;color:inherit;}
-    a:focus-visible, button:focus-visible{
+
+    a:focus-visible,
+    button:focus-visible{
       outline:2px solid var(--primary);
       outline-offset:2px;
     }
+
     .container{
-      width:100%; max-width:1120px; margin:0 auto; padding:0 20px;
+      width:100%;
+      max-width:1120px;
+      margin:0 auto;
+      padding:0 20px;
     }
 
-    /* Skip link for accessibility */
+    /* Skip link */
     .skip-link{
-      position:absolute; left:-999px; top:0;
-      background:#000; color:#fff;
-      padding:8px 14px; z-index:300;
+      position:absolute;
+      left:-999px;
+      top:0;
+      background:#000;
+      color:#fff;
+      padding:8px 14px;
+      z-index:300;
+      border-radius:0 0 10px 0;
       font-size:13px;
     }
-    .skip-link:focus{ left:0; }
+    .skip-link:focus{
+      left:0;
+    }
 
-    /* Top Info Bar */
+    /* Top bar */
     .topbar{
-      background:var(--primary);
-      color:#fff;
+      background:linear-gradient(90deg, #0f172a, #1d4ed8, #db2777);
+      color:#e5e7eb;
       font-size:13px;
-      text-align:center;
+      padding:6px 0;
+    }
+    .topbar-inner{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+    .topbar-right{
+      display:flex;
+      gap:16px;
+      font-size:12px;
+      opacity:.9;
+    }
+
+    /* Header / nav */
+    header{
+      position:sticky;
+      top:0;
+      z-index:120;
+      background:rgba(255,255,255,.96);
+      backdrop-filter:blur(14px);
+      box-shadow:0 1px 12px rgba(15,23,42,.11);
+      border-bottom:1px solid rgba(148,163,184,.25);
+    }
+    .dark header{
+      background:rgba(2,6,23,.97);
+      border-bottom-color:rgba(15,23,42,.9);
+    }
+
+    .nav{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:10px 0;
+      gap:16px;
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+    .brand-logo{
+      width:46px;
+      height:46px;
+      border-radius:18px;
+      padding:2px;
+      background:conic-gradient(from 120deg,#38bdf8,#ec4899,#6366f1,#38bdf8);
+      box-shadow:
+        0 0 8px rgba(56,189,248,.6),
+        0 0 16px rgba(236,72,153,.4);
+      position:relative;
+      animation:logoGlow 3s ease-in-out infinite;
+    }
+    .brand-logo-inner{
+      width:100%;
+      height:100%;
+      border-radius:14px;
+      background:#fff;
+      overflow:hidden;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+    .brand-logo-inner img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+    }
+
+    @keyframes logoGlow {
+      0%{box-shadow:0 0 8px rgba(56,189,248,.5),0 0 16px rgba(236,72,153,.3);}
+      50%{box-shadow:0 0 14px rgba(56,189,248,.9),0 0 26px rgba(236,72,153,.6);}
+      100%{box-shadow:0 0 8px rgba(56,189,248,.5),0 0 16px rgba(236,72,153,.3);}
+    }
+
+    .brand-text-main{
+      font-size:20px;
+      font-weight:800;
+      letter-spacing:.08em;
+    }
+    .brand-text-sub{
+      font-size:11px;
+      color:var(--text-soft);
+      margin-top:-3px;
+      text-transform:uppercase;
+      letter-spacing:.1em;
+    }
+
+    .nav-links{
+      display:flex;
+      align-items:center;
+      gap:20px;
+      font-size:14px;
+    }
+    .nav-links a{
+      position:relative;
+      padding:6px 10px;
+      border-radius:999px;
+      transition:background var(--transition-fast),color var(--transition-fast),transform var(--transition-fast),box-shadow var(--transition-fast);
+    }
+    .nav-links a::after{
+      content:"";
+      position:absolute;
+      left:12px;
+      right:12px;
+      bottom:4px;
+      height:2px;
+      border-radius:999px;
+      background:linear-gradient(90deg,#38bdf8,#ec4899);
+      opacity:0;
+      transform:scaleX(0.6);
+      transition:opacity var(--transition-fast),transform var(--transition-fast);
+    }
+    .nav-links a:hover{
+      background:rgba(191,219,254,.8);
+      box-shadow:0 6px 16px rgba(59,130,246,.35);
+      transform:translateY(-1px);
+    }
+    .nav-links a:hover::after{
+      opacity:1;
+      transform:scaleX(1);
+    }
+
+    .nav-right{
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+
+    .btn{
+      border:none;
+      cursor:pointer;
+      border-radius:var(--radius-pill);
+      padding:8px 18px;
+      font-size:13px;
+      font-weight:600;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:6px;
+      transition:
+        background var(--transition-fast),
+        color var(--transition-fast),
+        transform var(--transition-fast),
+        box-shadow var(--transition-fast);
+      white-space:nowrap;
+    }
+    .btn-primary{
+      background:linear-gradient(135deg,#0ea5e9,#6366f1,#ec4899);
+      color:#fff;
+      box-shadow:0 10px 22px rgba(59,130,246,.5);
+    }
+    .btn-primary:hover{
+      transform:translateY(-1px);
+      box-shadow:0 14px 30px rgba(59,130,246,.7);
+    }
+    .btn-outline{
+      background:transparent;
+      border:1px solid rgba(148,163,184,.7);
+      color:var(--primary-dark);
+    }
+    .btn-outline:hover{
+      background:rgba(219,234,254,.9);
+      color:#0f172a;
+      box-shadow:0 10px 24px rgba(148,163,184,.55);
+    }
+    .btn-small{
+      padding:6px 12px;
+      font-size:11px;
+    }
+
+    /* Theme toggle */
+    .theme-toggle{
+      padding:4px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background:var(--bg-soft);
+      display:flex;
+      align-items:center;
+      gap:4px;
+      cursor:pointer;
+      font-size:11px;
+    }
+    .theme-toggle span{
+      padding:3px 6px;
+      border-radius:999px;
+      opacity:.5;
+    }
+    .theme-toggle span.active{
+      background:linear-gradient(120deg,#38bdf8,#ec4899);
+      color:#fff;
+      opacity:1;
+    }
+
+    /* Mobile nav */
+    .nav-toggle{
+      display:none;
+      flex-direction:column;
+      gap:4px;
+      cursor:pointer;
+    }
+    .nav-toggle span{
+      width:20px;
+      height:2px;
+      border-radius:999px;
+      background:#111827;
+      transition:transform var(--transition-fast),opacity var(--transition-fast);
+    }
+    .dark .nav-toggle span{
+      background:#e5e7eb;
+    }
+
+    .nav-mobile{
+      display:none;
+      background:var(--bg-elevated);
+      box-shadow:0 10px 22px rgba(15,23,42,.2);
+    }
+    .nav-mobile.open{
+      display:block;
+    }
+    .nav-mobile-inner{
+      padding:10px 20px 14px;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      font-size:14px;
+    }
+    .nav-mobile-inner a{
       padding:6px 0;
     }
 
-    /* HEADER / NAV */
-    header{
-      position:sticky; top:0; z-index:120;
-      background:rgba(255,255,255,0.96);
-      backdrop-filter:blur(10px);
-      box-shadow:0 1px 12px rgba(15,23,42, .11);
-      border-bottom:1px solid var(--border);
-    }
-    .nav{
-      display:flex; align-items:center; justify-content:space-between;
-      padding:10px 0; gap:16px;
-    }
-    .brand{
-      display:flex; align-items:center; gap:10px;
-    }
-    .brand-logo{
-      width:46px; height:46px; border-radius:8px; overflow:hidden;
-    }
-    .brand-logo img{ width:100%; height:100%; object-fit:cover; }
-    .brand-text-main{ font-size:20px; font-weight:700; }
-    .brand-text-sub{ font-size:11px; color:var(--text-soft); }
-
-    .nav-links{
-      display:flex; align-items:center; gap:18px; font-size:14px;
-    }
-    .nav-links a{
-      padding:6px 10px; border-radius:var(--radius-pill);
-      transition: background var(--transition-fast), transform var(--transition-fast);
-    }
-    .nav-links a:hover{
-      background:rgba(191,219,254, .6);
-      transform: translateY(-1px);
-    }
-
-    .nav-toggle{
-      display:none;
-      flex-direction:column; gap:4px; cursor:pointer;
-    }
-    .nav-toggle span{
-      width:20px; height:2px; background:#111827; border-radius:2px;
-      transition: transform var(--transition-fast), opacity var(--transition-fast);
-    }
     @media(max-width:900px){
-      .nav-links{ display:none; }
-      .nav-toggle{ display:flex; }
+      .nav-links,
+      .nav-right .btn-outline,
+      .nav-right .btn-primary{
+        display:none;
+      }
+      .nav-toggle{
+        display:flex;
+      }
     }
 
-    /* Hero Section */
-    .hero{
-      padding:60px 0; background:var(--bg-soft);
+    /* Breadcrumb (ILO-style structural hint) */
+    .breadcrumb-wrap{
+      background:var(--bg-soft);
+      border-bottom:1px solid rgba(148,163,184,.25);
     }
+    .breadcrumb{
+      font-size:12px;
+      padding:6px 0 8px;
+      color:var(--text-soft);
+    }
+    .breadcrumb a{
+      color:var(--primary-dark);
+    }
+
+    /* Hero */
+    .hero{
+      padding:60px 0 45px;
+      background:
+        radial-gradient(circle at 0 0,#dbeafe 0,transparent 55%),
+        radial-gradient(circle at 100% 0,#fce7f3 0,transparent 55%),
+        linear-gradient(to bottom,#f9fafb,#eff6ff 50%,#fdf2ff);
+    }
+    .dark .hero{
+      background:
+        radial-gradient(circle at 0 0,#0f172a 0,transparent 55%),
+        radial-gradient(circle at 100% 0,#111827 0,transparent 70%);
+    }
+
     .hero-grid{
       display:grid;
-      grid-template-columns:1fr 1fr;
-      align-items:center;
+      grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);
       gap:40px;
+      align-items:center;
     }
-    @media(max-width:800px){
-      .hero-grid{grid-template-columns:1fr;}
+    @media(max-width:900px){
+      .hero-grid{grid-template-columns:minmax(0,1fr);}
     }
-    .hero-title{
-      font-size:clamp(2rem,4vw,2.8rem);
+
+    .hero-tag{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:4px 10px;
+      border-radius:var(--radius-pill);
+      background:linear-gradient(120deg,rgba(56,189,248,.12),rgba(236,72,153,.12));
+      border:1px solid rgba(129,140,248,.35);
+      font-size:11px;
+      font-weight:600;
+      letter-spacing:.08em;
+      text-transform:uppercase;
       margin-bottom:12px;
+      color:var(--primary-dark);
+    }
+    .hero-dot{
+      width:8px;height:8px;border-radius:999px;
+      background:radial-gradient(circle,#22c55e,#16a34a);
+      box-shadow:0 0 8px rgba(34,197,94,.7);
+    }
+
+    .hero-title{
+      font-size:clamp(2.15rem,3vw + 1rem,2.9rem);
+      line-height:1.15;
+      margin-bottom:10px;
     }
     .hero-title span{
-      color:var(--primary);
+      background:linear-gradient(120deg,#0ea5e9,#6366f1,#ec4899);
+      -webkit-background-clip:text;
+      color:transparent;
     }
-    .hero-sub{
-      font-size:16px; color:var(--text-soft); margin-bottom:18px;
-    }
-    .btn{
-      border:none; cursor:pointer; border-radius:var(--radius-pill);
-      padding:10px 22px; font-size:14px; font-weight:600;
-      transition: background var(--transition-fast), transform var(--transition-fast);
-    }
-    .btn-primary{
-      background:var(--primary); color:#fff;
-    }
-    .btn-outline{
-      background:transparent; border:1px solid var(--primary); color:var(--primary);
-    }
-    .btn:hover{ transform: translateY(-1px); }
 
-    /* Sections */
-    section{ padding:50px 0; }
-    section:nth-of-type(even){ background:var(--bg-soft); }
+    .hero-sub{
+      font-size:15px;
+      color:var(--text-soft);
+      max-width:34rem;
+      margin-bottom:18px;
+    }
+
+    .hero-actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-bottom:16px;
+    }
+
+    .hero-actions .btn-outline{
+      border-color:rgba(236,72,153,.55);
+    }
+
+    .hero-meta{
+      display:flex;
+      flex-wrap:wrap;
+      gap:18px;
+      font-size:12px;
+      color:var(--text-soft);
+    }
+    .hero-meta strong{
+      display:block;
+      font-size:13px;
+      color:var(--text);
+    }
+
+    .hero-card{
+      background:var(--bg-elevated);
+      border-radius:var(--radius-lg);
+      padding:18px;
+      box-shadow:var(--shadow-soft);
+      position:relative;
+      overflow:hidden;
+      border:1px solid rgba(191,219,254,.8);
+    }
+    .hero-card::before{
+      content:"";
+      position:absolute;
+      inset:-40%;
+      background:
+        radial-gradient(circle at 0 0,rgba(56,189,248,.22),transparent 60%),
+        radial-gradient(circle at 100% 100%,rgba(236,72,153,.24),transparent 55%);
+      opacity:.9;
+      pointer-events:none;
+    }
+    .hero-card-content{position:relative;z-index:1;}
+    .pill-row{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin:8px 0 10px;
+    }
+    .pill{
+      background:var(--primary-soft);
+      padding:4px 10px;
+      border-radius:var(--radius-pill);
+      font-size:11px;
+    }
+    .pill.alert{
+      background:rgba(220,38,38,.09);
+      color:#b91c1c;
+    }
+
+    /* Simple site search box inside hero card */
+    .hero-search{
+      margin-top:10px;
+      padding-top:10px;
+      border-top:1px dashed rgba(148,163,184,.6);
+    }
+    .hero-search label{
+      font-size:11px;
+      color:var(--text-soft);
+      display:block;
+      margin-bottom:4px;
+    }
+    .hero-search-row{
+      display:flex;
+      gap:8px;
+    }
+    .hero-search-row input{
+      flex:1;
+      border-radius:999px;
+      border:1px solid var(--border);
+      padding:6px 10px;
+      font-size:12px;
+      outline:none;
+    }
+    .hero-search-row input:focus{
+      border-color:var(--primary);
+      box-shadow:0 0 0 1px rgba(37,99,235,.35);
+    }
+
+    /* Stats */
+    .stats{
+      display:flex;
+      flex-wrap:wrap;
+      gap:16px;
+      margin-top:12px;
+      font-size:12px;
+    }
+    .stat-item{
+      min-width:90px;
+    }
+    .stat-number{
+      font-size:18px;
+      font-weight:700;
+      background:linear-gradient(120deg,#0ea5e9,#ec4899);
+      -webkit-background-clip:text;
+      color:transparent;
+    }
+    .stat-label{
+      color:var(--text-soft);
+      font-size:11px;
+    }
+
+    /* Sections generic */
+    section{
+      padding:50px 0;
+    }
+    section:nth-of-type(even){
+      background:var(--bg-soft);
+    }
+    .dark section:nth-of-type(even){
+      background:#02091b;
+    }
 
     .section-header{
       margin-bottom:24px;
     }
     .section-kicker{
-      font-size:11px; text-transform:uppercase;
-      color:var(--primary); letter-spacing:.12em;
+      font-size:11px;
+      text-transform:uppercase;
+      letter-spacing:.12em;
+      color:var(--primary-dark);
+      font-weight:700;
       margin-bottom:4px;
     }
+    .dark .section-kicker{
+      color:#bfdbfe;
+    }
     .section-title{
-      font-size:24px; margin-bottom:6px;
+      font-size:24px;
+      margin-bottom:4px;
+    }
+    .section-title span{
+      background:linear-gradient(120deg,#38bdf8,#ec4899);
+      -webkit-background-clip:text;
+      color:transparent;
     }
     .section-sub{
-      font-size:14px; color:var(--text-soft); max-width:600px;
+      font-size:14px;
+      color:var(--text-soft);
+      max-width:38rem;
     }
 
-    /* Grid cards */
+    /* Grids & cards */
     .grid-3{
-      display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:20px;
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:20px;
     }
     @media(max-width:900px){
-      .grid-3{ grid-template-columns:repeat(2,minmax(0,1fr));}
+      .grid-3{grid-template-columns:repeat(2,minmax(0,1fr));}
     }
     @media(max-width:640px){
-      .grid-3{ grid-template-columns:1fr; }
+      .grid-3{grid-template-columns:minmax(0,1fr);}
     }
+
+    .grid-4{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:16px;
+    }
+    @media(max-width:900px){
+      .grid-4{grid-template-columns:repeat(2,minmax(0,1fr));}
+    }
+    @media(max-width:640px){
+      .grid-4{grid-template-columns:minmax(0,1fr);}
+    }
+
     .card{
       background:var(--bg-elevated);
       border-radius:var(--radius-lg);
-      padding:20px; box-shadow:var(--shadow-soft);
+      padding:18px;
+      box-shadow:var(--shadow-soft);
     }
 
-    /* Downloads / Resources table */
-    .resources-table{
-      width:100%; border-collapse:collapse;
+    .icon-circle{
+      width:34px;
+      height:34px;
+      border-radius:50%;
+      background:radial-gradient(circle,#dbeafe,#fce7f3);
+      border:1px solid rgba(129,140,248,.4);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:18px;
+      margin-bottom:6px;
     }
-    .resources-table th, .resources-table td{
-      padding:10px 8px; border:1px solid var(--border);
-      text-align:left;
+    .card-title{
+      font-size:15px;
+      font-weight:600;
+      margin-bottom:4px;
+    }
+    .card-body{
+      font-size:13px;
+      color:var(--text-soft);
+    }
+
+    .leader-img{
+      width:64px;
+      height:64px;
+      border-radius:50%;
+      margin:0 auto 8px;
+      background:conic-gradient(from 210deg,#38bdf8,#ec4899,#6366f1,#38bdf8);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      box-shadow:0 10px 25px rgba(148,163,184,.7);
+    }
+    .leader-inner{
+      width:88%;
+      height:88%;
+      border-radius:999px;
+      background:#f9fafb;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-weight:700;
+      font-size:17px;
+      color:#0f172a;
+      overflow:hidden;
+    }
+    .leader-inner.leader-photo img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      border-radius:999px;
+    }
+    .leader-name{
+      text-align:center;
       font-size:14px;
+      font-weight:600;
+    }
+    .leader-role{
+      text-align:center;
+      font-size:12px;
+      color:var(--text-soft);
+    }
+
+    /* Member universities */
+    .member-grid{
+      display:grid;
+      grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);
+      gap:20px;
+    }
+    @media(max-width:950px){
+      .member-grid{grid-template-columns:minmax(0,1fr);}
+    }
+    .member-list{
+      max-height:260px;
+      overflow:auto;
+      padding-right:8px;
+      scrollbar-width:thin;
+    }
+    .member-list::-webkit-scrollbar{
+      width:6px;
+    }
+    .member-list::-webkit-scrollbar-thumb{
+      background:#9ca3af;
+      border-radius:999px;
+    }
+    .member-list h3{
+      font-size:14px;
+      margin-bottom:4px;
+    }
+    .member-list ul{
+      font-size:12px;
+      color:var(--text-soft);
+      padding-left:18px;
+    }
+    .member-list li{
+      margin-bottom:2px;
+    }
+
+    /* RESOURCES / DOCUMENTS (ILO-style) */
+    .resources-table{
+      width:100%;
+      border-collapse:collapse;
+      font-size:13px;
+      margin-top:4px;
+    }
+    .resources-table th,
+    .resources-table td{
+      padding:8px 10px;
+      border:1px solid var(--border);
+      text-align:left;
     }
     .resources-table th{
-      background:var(--bg-soft);
+      background:var(--primary-soft);
+      font-weight:600;
     }
     .resources-table a{
-      color:var(--primary);
+      color:var(--primary-dark);
+      text-decoration:underline;
+      text-decoration-thickness:1px;
     }
+    .resources-meta{
+      font-size:12px;
+      color:var(--text-soft);
+      margin-top:6px;
+    }
+
+    /* Media section */
+    .media-grid{
+      display:grid;
+      grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);
+      gap:20px;
+    }
+    @media(max-width:950px){
+      .media-grid{grid-template-columns:minmax(0,1fr);}
+    }
+    .video-card{
+      border-radius:var(--radius-lg);
+      overflow:hidden;
+      background:#000;
+      box-shadow:var(--shadow-soft);
+    }
+    .video-card video{
+      width:100%;
+      display:block;
+    }
+    .video-caption{
+      padding:10px 12px;
+      font-size:12px;
+      color:var(--text-soft);
+      background:linear-gradient(90deg,rgba(15,23,42,.9),rgba(30,64,175,.9));
+      color:#e5e7eb;
+    }
+
+    /* Gallery */
+    .gallery-grid{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:10px;
+    }
+    @media(max-width:900px){
+      .gallery-grid{grid-template-columns:repeat(3,minmax(0,1fr));}
+    }
+    @media(max-width:640px){
+      .gallery-grid{grid-template-columns:repeat(2,minmax(0,1fr));}
+    }
+    .gallery-item{
+      position:relative;
+      border-radius:14px;
+      overflow:hidden;
+      box-shadow:0 10px 20px rgba(15,23,42,.24);
+      cursor:pointer;
+      isolation:isolate;
+    }
+    .gallery-item img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      transition:transform .4s ease,filter .4s ease;
+    }
+    .gallery-item::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:linear-gradient(145deg,rgba(15,23,42,.1),rgba(236,72,153,.25));
+      opacity:0;
+      transition:opacity .3s ease;
+    }
+    .gallery-item:hover img{
+      transform:scale(1.06);
+      filter:brightness(1.1);
+    }
+    .gallery-item:hover::after{
+      opacity:1;
+    }
+
+    /* News */
+    .news-list{
+      display:grid;
+      gap:16px;
+    }
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      border-radius:var(--radius-pill);
+      padding:2px 8px;
+      font-size:10px;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+    }
+    .badge-live{
+      background:rgba(220,38,38,.09);
+      color:#b91c1c;
+    }
+    .badge-info{
+      background:rgba(37,99,235,.12);
+      color:#1d4ed8;
+    }
+    .news-meta{
+      font-size:11px;
+      color:var(--text-soft);
+      margin-bottom:4px;
+    }
+    .news-body{
+      font-size:13px;
+      color:var(--text-soft);
+    }
+
+    /* FAQ accordion */
+    .faq-list{
+      display:grid;
+      gap:10px;
+    }
+    .faq-item{
+      border-radius:var(--radius-lg);
+      border:1px solid var(--border);
+      background:var(--bg-elevated);
+      overflow:hidden;
+    }
+    .faq-header{
+      padding:10px 14px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      cursor:pointer;
+      font-size:13px;
+    }
+    .faq-header span{
+      font-weight:600;
+    }
+    .faq-header button{
+      border:none;
+      background:transparent;
+      font-size:18px;
+      line-height:1;
+      cursor:pointer;
+    }
+    .faq-body{
+      padding:0 14px 10px;
+      font-size:13px;
+      color:var(--text-soft);
+      display:none;
+    }
+    .faq-item.open .faq-body{
+      display:block;
+    }
+
+    /* Contact */
+    .split-2{
+      display:grid;
+      grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);
+      gap:24px;
+    }
+    @media(max-width:900px){
+      .split-2{grid-template-columns:minmax(0,1fr);}
+    }
+
+    form{
+      display:grid;
+      gap:10px;
+    }
+    label{
+      display:block;
+      font-size:12px;
+      font-weight:500;
+      margin-bottom:2px;
+    }
+    input,textarea,select{
+      width:100%;
+      border-radius:10px;
+      border:1px solid var(--border);
+      padding:7px 9px;
+      font-size:13px;
+      background:#f9fafb;
+      outline:none;
+      transition:border var(--transition-fast),box-shadow var(--transition-fast),background var(--transition-fast);
+    }
+    .dark input,
+    .dark textarea,
+    .dark select{
+      background:#02091b;
+      color:var(--text);
+    }
+    input:focus,textarea:focus,select:focus{
+      border-color:var(--primary);
+      box-shadow:0 0 0 1px rgba(0,82,204,.35);
+      background:#fff;
+    }
+    textarea{min-height:110px;resize:vertical;}
+
+    .contact-info{
+      font-size:13px;
+      color:var(--text-soft);
+    }
+    .contact-info p{margin-bottom:6px;}
 
     /* Footer */
     footer{
-      background:var(--primary); color:#fff;
-      padding:40px 0 20px;
-      font-size:14px;
+      background:#020617;
+      color:#e5e7eb;
+      padding:40px 0 18px;
+      margin-top:40px;
     }
     .footer-grid{
-      display:grid; grid-template-columns:1fr 1fr 1fr; gap:20px;
+      display:grid;
+      grid-template-columns: minmax(0,1.5fr) repeat(2,minmax(0,1fr));
+      gap:20px;
+      font-size:13px;
     }
-    @media(max-width:800px){
-      .footer-grid{ grid-template-columns:1fr; }
+    @media(max-width:900px){
+      .footer-grid{grid-template-columns:minmax(0,1fr) minmax(0,1fr);}
     }
-    .footer-links{ list-style:none; padding:0; }
-    .footer-links li{ margin-bottom:6px; }
-    .footer-links a{ color:#fff; }
+    @media(max-width:640px){
+      .footer-grid{grid-template-columns:minmax(0,1fr);}
+    }
+    .footer-heading{
+      font-weight:600;
+      margin-bottom:6px;
+    }
+    .footer-links{
+      list-style:none;
+      display:grid;
+      gap:3px;
+    }
+    .footer-links a{
+      color:#cbd5f5;
+      font-size:12px;
+    }
+    .footer-bottom{
+      border-top:1px solid #1f2933;
+      margin-top:20px;
+      padding-top:10px;
+      font-size:11px;
+      color:#9ca3af;
+      display:flex;
+      justify-content:space-between;
+      flex-wrap:wrap;
+      gap:8px;
+    }
 
+    /* Back to top */
+    .back-to-top{
+      position:fixed;
+      right:16px;
+      bottom:68px;
+      display:none;
+      z-index:140;
+    }
+    .back-to-top button{
+      border:none;
+      border-radius:999px;
+      background:linear-gradient(120deg,#0ea5e9,#ec4899);
+      color:#fff;
+      padding:6px 11px;
+      font-size:11px;
+      cursor:pointer;
+      box-shadow:0 10px 20px rgba(59,130,246,.55);
+    }
+
+    /* WhatsApp */
+    .whatsapp-float{
+      position:fixed;
+      right:16px;
+      bottom:16px;
+      z-index:150;
+    }
+    .whatsapp-float a{
+      display:flex;
+      align-items:center;
+      gap:6px;
+      padding:8px 14px;
+      border-radius:999px;
+      background:#22c55e;
+      color:#fff;
+      font-size:13px;
+      font-weight:600;
+      box-shadow:0 12px 24px rgba(34,197,94,.55);
+    }
+    .whatsapp-icon{
+      width:20px;
+      height:20px;
+      border-radius:50%;
+      border:1px solid rgba(255,255,255,.7);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:12px;
+    }
+    @media(max-width:480px){
+      .whatsapp-float span.label{display:none;}
+    }
   </style>
 </head>
+
 <body>
   <a href="#main" class="skip-link">Skip to main content</a>
 
+  <!-- TOP INFO BAR -->
   <div class="topbar">
-    ✊ Defending workers’ rights • Promoting dignity • Unity & Solidarity
+    <div class="container topbar-inner">
+      <span>✊ Defending university workers' rights • Promoting decent work • Protecting staff dignity</span>
+      <div class="topbar-right">
+        <span>Article 36 &amp; 41 – Constitution of Kenya</span>
+        <span>Labour Relations Act – Union Rights</span>
+      </div>
+    </div>
   </div>
 
+  <!-- HEADER / NAV -->
   <header>
     <div class="container nav">
-      <a href="#home" class="brand">
+      <a href="#home" class="brand" aria-label="KUSU home">
         <div class="brand-logo">
-          <img src="kusu-logo.png" alt="KUSU Logo" />
+          <div class="brand-logo-inner">
+            <img src="kusu-logo.png" alt="KUSU Logo">
+          </div>
         </div>
         <div>
           <div class="brand-text-main">KUSU</div>
@@ -248,247 +1048,882 @@
         </div>
       </a>
 
-      <nav class="nav-links">
+      <nav class="nav-links" aria-label="Main navigation">
         <a href="#about">About</a>
-        <a href="#why">Why Join</a>
-        <a href="#members">Members</a>
+        <a href="#why-join">Why Join</a>
+        <a href="#members">Member Universities</a>
         <a href="#resources">Resources</a>
-        <a href="#news">News</a>
+        <a href="#leaders">Leadership</a>
         <a href="#media">Media</a>
+        <a href="#news">News</a>
+        <a href="#faq">FAQ</a>
         <a href="#contact">Contact</a>
       </nav>
 
-      <button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false">
-        <span></span><span></span><span></span>
-      </button>
+      <div class="nav-right">
+        <div class="theme-toggle" id="themeToggle" aria-label="Toggle color mode">
+          <span id="lightLabel">☀️</span>
+          <span id="darkLabel">🌙</span>
+        </div>
+
+        <button class="btn btn-outline" onclick="document.querySelector('#news').scrollIntoView({behavior:'smooth'})">
+          Latest Updates
+        </button>
+        <button class="btn btn-primary" onclick="document.querySelector('#why-join').scrollIntoView({behavior:'smooth'})">
+          Join KUSU
+        </button>
+
+        <button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile nav -->
+    <div class="nav-mobile" id="navMobile">
+      <div class="nav-mobile-inner">
+        <a href="#about" onclick="closeMobile()">About</a>
+        <a href="#why-join" onclick="closeMobile()">Why Join</a>
+        <a href="#members" onclick="closeMobile()">Member Universities</a>
+        <a href="#resources" onclick="closeMobile()">Resources</a>
+        <a href="#leaders" onclick="closeMobile()">Leadership</a>
+        <a href="#media" onclick="closeMobile()">Media</a>
+        <a href="#news" onclick="closeMobile()">News</a>
+        <a href="#faq" onclick="closeMobile()">FAQ</a>
+        <a href="#contact" onclick="closeMobile()">Contact</a>
+      </div>
     </div>
   </header>
 
+  <!-- Breadcrumb (like ILO section breadcrumb) -->
+  <div class="breadcrumb-wrap">
+    <div class="container">
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <a href="#home">Home</a> › <span>Overview</span>
+      </nav>
+    </div>
+  </div>
+
   <main id="main">
     <!-- HERO -->
-    <section class="hero" id="home">
+    <section class="hero" id="home" aria-labelledby="hero-title">
       <div class="container hero-grid">
         <div>
-          <h1 class="hero-title">Stronger together — <span>KUSU</span> for every university worker.</h1>
+          <div class="hero-tag">
+            <span class="hero-dot"></span>
+            <span>Unity • Solidarity • Justice</span>
+          </div>
+
+          <h1 class="hero-title" id="hero-title">
+            Stronger together: <span>KUSU</span> for every university worker.
+          </h1>
+
           <p class="hero-sub">
-            We unite non-teaching staff across all Kenyan public universities: ICT, Admin, Security, Support & more — fighting for fair work, dignity and rights.
+            KUSU brings non-teaching staff in Kenyan universities under one powerful voice – negotiating fair pay,
+            decent working conditions and respect at the workplace.
           </p>
-          <button class="btn btn-primary" onclick="document.getElementById('about').scrollIntoView({behavior:'smooth'})">Learn More</button>
+
+          <div class="hero-actions">
+            <button class="btn btn-primary" onclick="document.querySelector('#why-join').scrollIntoView({behavior:'smooth'})">
+              Join KUSU Today
+            </button>
+            <button class="btn btn-outline" onclick="document.querySelector('#contact').scrollIntoView({behavior:'smooth'})">
+              Talk to KUSU
+            </button>
+          </div>
+
+          <div class="hero-meta">
+            <div>
+              <strong>Who we represent</strong>
+              ICT • Administrative • Library • Technical • Drivers • Security • Support Staff
+            </div>
+            <div>
+              <strong>Legal backbone</strong>
+              Constitution of Kenya • Article 36 &amp; 41 • Labour Relations Act
+            </div>
+          </div>
         </div>
-        <div>
-          <!-- You could insert a hero image or video here -->
-          <img src="hero.jpg" alt="KUSU union staff solidarity" />
+
+        <div class="hero-card" aria-label="Union alerts and statistics">
+          <div class="hero-card-content">
+            <h3 style="font-size:15px;margin-bottom:4px;">Key Union Alerts</h3>
+            <div class="pill-row">
+              <span class="pill alert">No staff should be victimized for joining KUSU.</span>
+              <span class="pill">CRB listing must follow due process, not threats.</span>
+              <span class="pill">Dialogue and structured engagement before any action.</span>
+            </div>
+
+            <p style="font-size:12px;color:var(--text-soft);margin-bottom:10px;">
+              KUSU stands firmly that staff welfare, job security and dignity must be protected at all times.
+              Any violation of members’ rights will be challenged through legal and industrial relations channels.
+            </p>
+
+            <div class="stats" id="stats">
+              <div class="stat-item">
+                <div class="stat-number" data-target="40">0</div>
+                <div class="stat-label">Public Universities</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-number" data-target="5">0</div>
+                <div class="stat-label">Public Constituent Colleges</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-number" data-target="15000">0</div>
+                <div class="stat-label">Workers represented (and growing)</div>
+              </div>
+            </div>
+
+            <!-- Simple site search (ILO-style global search feel) -->
+            <div class="hero-search" aria-label="Site search">
+              <label for="siteSearch">Quick search (documents, news, branches)</label>
+              <div class="hero-search-row">
+                <input id="siteSearch" type="search" placeholder="Type a keyword e.g. 'CBA', 'CRB', 'JOOUST'..." />
+                <button class="btn btn-small btn-primary" type="button" onclick="handleQuickSearch()">
+                  Search
+                </button>
+              </div>
+              <p class="resources-meta">Tip: This is a demo search. Connect it to your CMS or search service.</p>
+            </div>
+          </div>
         </div>
       </div>
     </section>
 
     <!-- ABOUT -->
-    <section id="about">
+    <section id="about" aria-labelledby="about-title">
       <div class="container">
         <div class="section-header">
           <div class="section-kicker">About KUSU</div>
-          <h2 class="section-title">Who we are</h2>
-          <p class="section-sub">KUSU is the registered union for non-teaching university staff across public universities in Kenya. We stand for dignity, fairness and workers’ rights.</p>
+          <h2 class="section-title" id="about-title">Who we are and what we stand for</h2>
+          <p class="section-sub">
+            KUSU is a registered trade union representing non-teaching staff in universities across Kenya,
+            championing social justice, decent work and fair treatment for all members.
+          </p>
         </div>
+
         <div class="grid-3">
           <div class="card">
-            <h3>Mission</h3>
-            <p>Organize, protect and advocate for better working conditions, fair treatment and staff welfare.</p>
+            <div class="icon-circle">🎯</div>
+            <div class="card-title">Mission</div>
+            <div class="card-body">
+              To organize and empower university staff, negotiate collectively for improved terms and conditions
+              of service, and safeguard members’ economic, social and professional interests.
+            </div>
           </div>
+
           <div class="card">
-            <h3>Values</h3>
-            <p>Unity • Solidarity • Integrity • Equity • Accountability</p>
+            <div class="icon-circle">⚖️</div>
+            <div class="card-title">Values</div>
+            <div class="card-body">
+              Unity • Solidarity • Integrity • Accountability • Equity • Non-discrimination.
+            </div>
           </div>
+
           <div class="card">
-            <h3>Who we represent</h3>
-            <p>ICT, Admin, Library, Technical, Security, Drivers, Support Staff — all public universities & constituent colleges.</p>
+            <div class="icon-circle">🤝</div>
+            <div class="card-title">Who we represent</div>
+            <div class="card-body">
+              ICT staff, administrative and finance staff, library and lab staff, drivers, grounds,
+              security and support staff in universities and constituent colleges.
+            </div>
           </div>
         </div>
       </div>
     </section>
 
     <!-- WHY JOIN -->
-    <section id="why">
+    <section id="why-join" aria-labelledby="why-title">
       <div class="container">
         <div class="section-header">
-          <div class="section-kicker">Why Join</div>
-          <h2 class="section-title">Your Rights. Your Voice. <span>Your Power.</span></h2>
-          <p class="section-sub">Union membership provides collective bargaining, legal support, protection and bargaining power — much stronger than going alone.</p>
+          <div class="section-kicker">Why join KUSU</div>
+          <h2 class="section-title" id="why-title">Your union. Your protection. <span>Your power.</span></h2>
+          <p class="section-sub">
+            Being in a union is a constitutional right. KUSU turns individual struggles
+            into a collective voice that management must respect.
+          </p>
         </div>
+
         <div class="grid-3">
-          <div class="card"><h3>Legal Protection</h3><p>Representation in disputes, hearings, and collective bargaining for fair terms.</p></div>
-          <div class="card"><h3>Benefits & Conditions</h3><p>Advocate for fair pay, allowances, leave, medical cover and working conditions.</p></div>
-          <div class="card"><h3>Solidarity & Voice</h3><p>A united voice carries stronger influence with management and authorities.</p></div>
+          <div class="card">
+            <div class="icon-circle">🛡️</div>
+            <div class="card-title">Protection from victimisation</div>
+            <div class="card-body">
+              Members are shielded from unfair disciplinary actions, intimidation or unfair labour practices
+              through structured representation and due process.
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="icon-circle">📜</div>
+            <div class="card-title">Collective bargaining</div>
+            <div class="card-body">
+              KUSU negotiates CBAs that cover salaries, allowances, medical cover, leave and other benefits
+              instead of each worker fighting alone.
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="icon-circle">📚</div>
+            <div class="card-title">Legal &amp; advisory support</div>
+            <div class="card-body">
+              Members receive guidance on labour laws, employment contracts, retirement benefits and
+              representation in disputes, conciliation and industrial court matters.
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="icon-circle">📣</div>
+            <div class="card-title">Advocacy &amp; campaigns</div>
+            <div class="card-body">
+              KUSU organises lawful meetings, petitions and engagements with government and university
+              stakeholders to defend workers’ welfare.
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="icon-circle">📈</div>
+            <div class="card-title">Training &amp; empowerment</div>
+            <div class="card-body">
+              Members benefit from training on labour rights, leadership, financial literacy and workplace skills
+              to grow professionally and personally.
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="icon-circle">🤝</div>
+            <div class="card-title">Unity &amp; solidarity</div>
+            <div class="card-body">
+              United staff speak with one strong voice – making it easier to address issues like delayed salaries,
+              unfair contracts and unsafe working conditions.
+            </div>
+          </div>
         </div>
       </div>
     </section>
 
-    <!-- MEMBERS (Universities & Colleges) -->
-    <section id="members">
+    <!-- MEMBER UNIVERSITIES -->
+    <section id="members" aria-labelledby="members-title">
       <div class="container">
         <div class="section-header">
-          <div class="section-kicker">Members</div>
-          <h2 class="section-title">Member Universities & Constituent Colleges</h2>
-          <p class="section-sub">KUSU organizes non-teaching staff across all public universities and recognized constituent colleges in Kenya.</p>
+          <div class="section-kicker">Member Universities</div>
+          <h2 class="section-title" id="members-title">All public universities &amp; constituent colleges</h2>
+          <p class="section-sub">
+            KUSU organises workers across public universities and recognised public constituent colleges in Kenya.
+            (List can be updated as CUE issues new charters.)
+          </p>
         </div>
-        <div class="card">
-          <!-- You can use a scrollable list or table; here a simple list as placeholder -->
-          <p>[List of all public universities and constituent colleges goes here]</p>
+
+        <div class="member-grid">
+          <div class="card member-list">
+            <h3>Public Universities</h3>
+            <ul>
+              <li>University of Nairobi</li>
+              <li>Moi University</li>
+              <li>Kenyatta University</li>
+              <li>Egerton University</li>
+              <li>Jomo Kenyatta University of Agriculture and Technology</li>
+              <li>Maseno University</li>
+              <li>Masinde Muliro University of Science and Technology</li>
+              <li>Technical University of Kenya</li>
+              <li>Technical University of Mombasa</li>
+              <li>Dedan Kimathi University of Technology</li>
+              <li>Chuka University</li>
+              <li>Pwani University</li>
+              <li>Kisii University</li>
+              <li>Laikipia University</li>
+              <li>South Eastern Kenya University</li>
+              <li>Multimedia University of Kenya</li>
+              <li>University of Kabianga</li>
+              <li>Karatina University</li>
+              <li>Meru University of Science and Technology</li>
+              <li>Kirinyaga University</li>
+              <li>Murang'a University of Technology</li>
+              <li>Machakos University</li>
+              <li>University of Eldoret</li>
+              <li>Kibabii University</li>
+              <li>Maasai Mara University</li>
+              <li>The Co-operative University of Kenya</li>
+              <li>Rongo University</li>
+              <li>Garissa University</li>
+              <li>Jaramogi Oginga Odinga University of Science and Technology</li>
+              <li>Taita Taveta University</li>
+              <li>Tharaka University</li>
+              <li>University of Embu</li>
+              <li>National Defence University - Kenya</li>
+              <li>Open University of Kenya</li>
+              <li>Kaimosi Friends University</li>
+              <li>National Intelligence and Research University</li>
+            </ul>
+          </div>
+
+          <div class="card member-list">
+            <h3>Public University Constituent Colleges</h3>
+            <ul>
+              <li>Turkana University College</li>
+              <li>Bomet University College</li>
+              <li>Koitaleel Samoei University College</li>
+              <li>Mama Ngina University College</li>
+              <li>Kenya Advanced Institute of Science and Technology (KAIST)</li>
+            </ul>
+            <p style="margin-top:8px;font-size:11px;color:var(--text-soft);">
+              These constituent colleges are attached to parent public universities and are also part of the
+              wider public university ecosystem.
+            </p>
+          </div>
         </div>
       </div>
     </section>
 
-    <!-- RESOURCES / DOCUMENTS DOWNLOAD -->
-    <section id="resources">
+    <!-- RESOURCES / DOCUMENTS (ILO-style section) -->
+    <section id="resources" aria-labelledby="resources-title">
       <div class="container">
         <div class="section-header">
-          <div class="section-kicker">Resources</div>
-          <h2 class="section-title">Union Documents & Publications</h2>
-          <p class="section-sub">Download union constitution, collective bargaining agreements (CBA), circulars, meeting minutes and other official documents.</p>
+          <div class="section-kicker">Resources &amp; Documents</div>
+          <h2 class="section-title" id="resources-title">Official documents, CBAs &amp; circulars</h2>
+          <p class="section-sub">
+            Download key KUSU documents: union constitution, collective bargaining agreements, circulars,
+            meeting communiqués and guidance notes. Replace the sample files below with your actual PDFs.
+          </p>
         </div>
-        <div class="card">
+
+        <div class="card" role="region" aria-label="Downloadable KUSU documents">
           <table class="resources-table">
             <thead>
-              <tr><th>Document</th><th>Type</th><th>Download</th></tr>
+              <tr>
+                <th scope="col">Title</th>
+                <th scope="col">Type</th>
+                <th scope="col">Year</th>
+                <th scope="col">Download</th>
+              </tr>
             </thead>
             <tbody>
               <tr>
                 <td>KUSU Constitution</td>
-                <td>PDF</td>
-                <td><a href="docs/kusu-constitution.pdf" download>Download</a></td>
+                <td>Policy / Constitution</td>
+                <td>Revised 2024</td>
+                <td><a href="docs/kusu-constitution.pdf" download>Download PDF</a></td>
               </tr>
               <tr>
-                <td>Collective Bargaining Agreement 2024</td>
-                <td>PDF</td>
-                <td><a href="docs/cba-2024.pdf" download>Download</a></td>
+                <td>Public Universities Non-Teaching Staff CBA</td>
+                <td>Collective Bargaining Agreement</td>
+                <td>2017–2021</td>
+                <td><a href="docs/kusu-cba-2017-2021.pdf" download>Download PDF</a></td>
               </tr>
               <tr>
-                <td>Meeting Minutes – National AGM Dec 2024</td>
-                <td>PDF</td>
-                <td><a href="docs/agm-minutes-2024.pdf" download>Download</a></td>
+                <td>Draft Public Universities CBA</td>
+                <td>CBA Negotiation Draft</td>
+                <td>2025–2029</td>
+                <td><a href="docs/kusu-cba-2025-2029-draft.pdf" download>Download PDF</a></td>
+              </tr>
+              <tr>
+                <td>Guidance on CRB Listing &amp; Staff Rights</td>
+                <td>Advisory Circular</td>
+                <td>2025</td>
+                <td><a href="docs/kusu-crb-guidance-2025.pdf" download>Download PDF</a></td>
               </tr>
             </tbody>
           </table>
+          <p class="resources-meta">
+            For older CBAs, circulars and detailed archives, contact the national office or your branch officials.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- LEADERSHIP -->
+    <section id="leaders" aria-labelledby="leaders-title">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-kicker">Leadership</div>
+          <h2 class="section-title" id="leaders-title">National &amp; Branch leadership</h2>
+          <p class="section-sub">
+            KUSU is led by democratically elected officials at national and branch levels.
+            Replace the placeholders below with actual leaders and branches.
+          </p>
+        </div>
+
+        <div class="grid-4">
+          <!-- SG with passport -->
+          <div class="card">
+            <div class="leader-img">
+              <div class="leader-inner leader-photo">
+                <img src="SG-passport.jpg" alt="Secretary General">
+              </div>
+            </div>
+            <div class="leader-name">Secretary General</div>
+            <div class="leader-role">Dr. Charles Mukhwaya – National Office</div>
+          </div>
+
+          <!-- Chairperson -->
+          <div class="card">
+            <div class="leader-img">
+              <div class="leader-inner">CH</div>
+            </div>
+            <div class="leader-name">Chairperson</div>
+            <div class="leader-role">Dr. Philip Onyango – National Office</div>
+          </div>
+
+          <!-- Treasurer with passport + name "Treasurer" -->
+          <div class="card">
+            <div class="leader-img">
+              <div class="leader-inner leader-photo">
+                <img src="treasurer.jpg" alt="Treasurer">
+              </div>
+            </div>
+            <div class="leader-name">Treasurer</div>
+            <div class="leader-role">Eng. James Makori – National Treasurer</div>
+          </div>
+
+          <!-- Organising Secretary -->
+          <div class="card">
+            <div class="leader-img">
+              <div class="leader-inner">OS</div>
+            </div>
+            <div class="leader-name">Organising Secretary</div>
+            <div class="leader-role">Earnest Wayaya – National Office</div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:18px;font-size:13px;color:var(--text-soft);">
+          <strong style="display:block;margin-bottom:4px;">Branch leadership</strong>
+          Add your branches here, for example:
+          <ul style="margin-left:16px;margin-top:4px;">
+            <li>KUSU – JOOUST Branch</li>
+            <li>KUSU – University of Nairobi Branch</li>
+            <li>KUSU – Moi University Branch</li>
+            <li>KUSU – [Your University] Branch</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- MEDIA (VIDEOS + GALLERY) -->
+    <section id="media" aria-labelledby="media-title">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-kicker">Media</div>
+          <h2 class="section-title" id="media-title">Voices, moments &amp; solidarity in action</h2>
+          <p class="section-sub">
+            Real people. Real stories. Use this space to showcase KUSU activities, meetings, marches,
+            trainings and member experiences.
+          </p>
+        </div>
+
+        <div class="media-grid">
+          <!-- Videos -->
+          <div>
+            <div class="video-card" style="margin-bottom:14px;">
+              <video src="vid1.mp4" controls></video>
+              <div class="video-caption">
+                KUSU message to members &mdash; leadership speaking directly to staff.
+              </div>
+            </div>
+
+            <div class="video-card">
+              <video src="vid2.mp4" controls></video>
+              <div class="video-caption">
+                Highlight of a KUSU engagement / meeting session with members.
+              </div>
+            </div>
+          </div>
+
+          <!-- Photo gallery -->
+          <div class="card">
+            <h3 style="font-size:15px;margin-bottom:8px;">Photo highlights</h3>
+            <p style="font-size:12px;color:var(--text-soft);margin-bottom:10px;">
+              Moments from KUSU events, meetings and member interactions. Replace descriptions according
+              to each picture.
+            </p>
+            <div class="gallery-grid">
+              <div class="gallery-item">
+                <img src="1.jpg" alt="KUSU event photo 1">
+              </div>
+              <div class="gallery-item">
+                <img src="2.jpg" alt="KUSU event photo 2">
+              </div>
+              <div class="gallery-item">
+                <img src="3.jpg" alt="KUSU event photo 3">
+              </div>
+              <div class="gallery-item">
+                <img src="4.jpg" alt="KUSU event photo 4">
+              </div>
+              <div class="gallery-item">
+                <img src="5.jpg" alt="KUSU event photo 5">
+              </div>
+              <div class="gallery-item">
+                <img src="6.jpg" alt="KUSU event photo 6">
+              </div>
+              <div class="gallery-item">
+                <img src="7.jpg" alt="KUSU event photo 7">
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
 
     <!-- NEWS & UPDATES -->
-    <section id="news">
+    <section id="news" aria-labelledby="news-title">
       <div class="container">
         <div class="section-header">
-          <div class="section-kicker">News & Updates</div>
-          <h2 class="section-title">Latest Announcements</h2>
-          <p class="section-sub">Keep updated with union notices, circulars, press statements and important events.</p>
+          <div class="section-kicker">News &amp; updates</div>
+          <h2 class="section-title" id="news-title">Stay informed</h2>
+          <p class="section-sub">
+            Use this space for official communication – meeting notices, press statements, circulars,
+            branch updates and CBA progress.
+          </p>
         </div>
-        <div class="card">
-          <article>
-            <h3>Members’ Consultative Meeting – 15 January 2026</h3>
-            <p>Date: 15 Jan 2026 | Venue: [Insert] | Time: 9:00 AM</p>
-            <p>All members are invited to attend a consultative meeting on staff welfare, CRB listing issues and pension remittance.</p>
-          </article>
+
+        <div class="split-2">
+          <div class="news-list">
+            <article class="card">
+              <span class="badge badge-live">Notice</span>
+              <h3 style="font-size:15px;margin-top:4px;">Upcoming members’ consultative meeting</h3>
+              <div class="news-meta">
+                Date: 15 January 2026 • Time: 9:00 a.m. • Venue: [Insert venue]
+              </div>
+              <p class="news-body">
+                All members are invited to a consultative meeting to discuss staff welfare, CRB listing concerns,
+                pension remittances and implementation of the current CBA.
+              </p>
+            </article>
+
+            <article class="card">
+              <span class="badge badge-info">Update</span>
+              <h3 style="font-size:15px;margin-top:4px;">Engagement with university management</h3>
+              <div class="news-meta">
+                Status: Ongoing • Channel: Structured social dialogue
+              </div>
+              <p class="news-body">
+                KUSU has opened structured dialogue with University Councils and Management to address delayed
+                remittances, contract terms and working environment concerns. A full report will be shared with
+                members through official channels.
+              </p>
+            </article>
+
+            <article class="card">
+              <span class="badge badge-info">Circular</span>
+              <h3 style="font-size:15px;margin-top:4px;">Reminder: Protection of union rights</h3>
+              <div class="news-meta">
+                Based on Constitution of Kenya, 2010 – Article 36 &amp; 41
+              </div>
+              <p class="news-body">
+                No employee should be intimidated, harassed or threatened for belonging to or participating in
+                KUSU activities. Any such incidents should be reported immediately to branch officials
+                or the national office.
+              </p>
+            </article>
+          </div>
+
+          <aside class="card" style="font-size:13px;">
+            <h3 style="font-size:15px;margin-bottom:6px;">How to verify official KUSU communication</h3>
+            <ul style="margin-left:16px;color:var(--text-soft);margin-bottom:10px;">
+              <li>Check if the message is on official KUSU letterhead or stamp.</li>
+              <li>Confirm with branch officials or official WhatsApp groups.</li>
+              <li>Cross-check with this website or verified social media pages.</li>
+              <li>Avoid forwarding unverified or inciting messages.</li>
+            </ul>
+            <p style="font-size:12px;color:var(--text-soft);">
+              KUSU believes in firm but lawful and peaceful advocacy rooted in facts, not rumours or incitement.
+            </p>
+          </aside>
         </div>
       </div>
     </section>
 
-    <!-- MEDIA (Gallery / Videos) -->
-    <section id="media">
+    <!-- FAQ -->
+    <section id="faq" aria-labelledby="faq-title">
       <div class="container">
         <div class="section-header">
-          <div class="section-kicker">Media</div>
-          <h2 class="section-title">Moments of Solidarity & Action</h2>
-          <p class="section-sub">Photos and videos from KUSU events, trainings, meetings and union activities.</p>
+          <div class="section-kicker">FAQ</div>
+          <h2 class="section-title" id="faq-title">Frequently asked questions</h2>
+          <p class="section-sub">
+            Quick answers for common questions from staff and members.
+          </p>
         </div>
-        <div class="grid-3">
-          <div class="card">
-            <video controls src="media/meeting.mp4" aria-label="KUSU meeting video"></video>
-            <p style="font-size:13px; color:var(--text-soft); margin-top:6px;">Union meeting highlights</p>
+
+        <div class="faq-list">
+          <div class="faq-item">
+            <div class="faq-header" onclick="toggleFaq(this)">
+              <span>Can I be punished for joining KUSU?</span>
+              <button type="button" aria-label="Toggle answer">+</button>
+            </div>
+            <div class="faq-body">
+              No. The Constitution of Kenya protects freedom of association and labour rights. No worker should be
+              victimised, threatened or dismissed for joining a union or participating in lawful union activities.
+            </div>
           </div>
-          <div class="card">
-            <img src="media/photo1.jpg" alt="KUSU union event photo 1" />
+
+          <div class="faq-item">
+            <div class="faq-header" onclick="toggleFaq(this)">
+              <span>How do I become a member?</span>
+              <button type="button" aria-label="Toggle answer">+</button>
+            </div>
+            <div class="faq-body">
+              Fill in the official KUSU membership form, provide your correct staff details and submit it to your
+              branch officials for processing and payroll deduction. You can also contact KUSU using the form below
+              for guidance.
+            </div>
           </div>
-          <div class="card">
-            <img src="media/photo2.jpg" alt="KUSU union event photo 2" />
+
+          <div class="faq-item">
+            <div class="faq-header" onclick="toggleFaq(this)">
+              <span>What should I do if I face intimidation?</span>
+              <button type="button" aria-label="Toggle answer">+</button>
+            </div>
+            <div class="faq-body">
+              Document what has happened, keep any written evidence, and immediately inform your branch officials
+              or the KUSU national office. Do not resign under pressure without seeking advice.
+            </div>
           </div>
         </div>
       </div>
     </section>
 
     <!-- CONTACT -->
-    <section id="contact">
+    <section id="contact" aria-labelledby="contact-title">
       <div class="container">
         <div class="section-header">
           <div class="section-kicker">Contact</div>
-          <h2 class="section-title">Get in Touch</h2>
-          <p class="section-sub">Have questions, concerns or want to join? Reach out to us via email, phone or the contact form below.</p>
+          <h2 class="section-title" id="contact-title">Talk to KUSU</h2>
+          <p class="section-sub">
+            Use the form and contacts below for official communication. Replace placeholders with your actual
+            national and branch details.
+          </p>
         </div>
-        <div class="card">
-          <form onsubmit="e => { e.preventDefault(); alert('Form submission placeholder — integrate backend'); }">
-            <div style="margin-bottom:10px;">
-              <label for="name">Full Name</label><br />
-              <input id="name" type="text" required />
-            </div>
-            <div style="margin-bottom:10px;">
-              <label for="email">Email Address</label><br />
-              <input id="email" type="email" required />
-            </div>
-            <div style="margin-bottom:10px;">
-              <label for="message">Message</label><br />
-              <textarea id="message" required></textarea>
-            </div>
-            <button class="btn btn-primary" type="submit">Send Message</button>
-          </form>
-          <div style="margin-top:16px; font-size:14px; color:var(--text-soft);">
-            <strong>Office Address:</strong> P.O. Box ___, Nairobi, Kenya<br />
-            <strong>Phone:</strong> +254 7XX XXX XXX<br />
-            <strong>Email:</strong> info@kusu.or.ke
+
+        <div class="split-2">
+          <div class="card">
+            <form onsubmit="handleContactSubmit(event)">
+              <div>
+                <label for="name">Full name</label>
+                <input id="name" type="text" placeholder="Your full name" required />
+              </div>
+              <div>
+                <label for="email">Email</label>
+                <input id="email" type="email" placeholder="you@example.com" required />
+              </div>
+              <div>
+                <label for="university">University / Campus</label>
+                <input id="university" type="text" placeholder="e.g. JOOUST, UoN, Moi..." />
+              </div>
+              <div>
+                <label for="subject">Subject</label>
+                <input id="subject" type="text" placeholder="Subject of your message" />
+              </div>
+              <div>
+                <label for="message">Message</label>
+                <textarea id="message" placeholder="Write your message here..." required></textarea>
+              </div>
+              <button class="btn btn-primary" type="submit" style="margin-top:6px;">
+                Submit enquiry
+              </button>
+              <p id="contactMessage"
+                 style="font-size:12px;color:var(--accent);margin-top:6px;display:none;">
+                Thank you. This demo form does not send emails yet – connect it to your email system or form
+                service.
+              </p>
+            </form>
+          </div>
+
+          <div class="card contact-info">
+            <p><strong>National Office</strong></p>
+            <p>Address: P.O. Box [Number], [City], Kenya</p>
+            <p>Phone: +254 7XX XXX XXX</p>
+            <p>Email: info@kusu.or.ke</p>
+
+            <p style="margin-top:10px;"><strong>Example branch contact</strong></p>
+            <p>JOOUST Branch – +254 7XX XXX XXX – kusu.jooust@[domain]</p>
+
+            <p style="margin-top:10px;"><strong>Social media</strong></p>
+            <p>Facebook: KUSU Kenya<br/>X (Twitter): @KUSU_Kenya<br/>WhatsApp: Official branch groups</p>
           </div>
         </div>
       </div>
     </section>
   </main>
 
+  <!-- FOOTER -->
   <footer>
-    <div class="container footer-grid">
-      <div>
-        <h4>KUSU</h4>
-        <p>A united voice for non-teaching university staff in Kenya. Solidarity • Justice • Dignity at work.</p>
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <div class="footer-heading">KUSU – Kenya University Staff Union</div>
+          <p style="color:#cbd5f5;">
+            A united voice for non-teaching staff in Kenyan universities – defending rights, protecting welfare
+            and promoting dignity at work.
+          </p>
+        </div>
+
+        <div>
+          <div class="footer-heading">Quick links</div>
+          <ul class="footer-links">
+            <li><a href="#about">About KUSU</a></li>
+            <li><a href="#why-join">Why Join</a></li>
+            <li><a href="#members">Member Universities</a></li>
+            <li><a href="#resources">Resources &amp; Documents</a></li>
+            <li><a href="#leaders">Leadership</a></li>
+            <li><a href="#media">Media</a></li>
+            <li><a href="#news">News &amp; Updates</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <div class="footer-heading">Support &amp; reporting</div>
+          <ul class="footer-links">
+            <li><a href="#contact">Contact office</a></li>
+            <li><a href="#contact">Report a grievance</a></li>
+            <li><a href="#faq">Frequently asked questions</a></li>
+          </ul>
+        </div>
       </div>
-      <div>
-        <h4>Navigate</h4>
-        <ul class="footer-links">
-          <li><a href="#about">About</a></li>
-          <li><a href="#members">Members</a></li>
-          <li><a href="#resources">Resources</a></li>
-          <li><a href="#contact">Contact</a></li>
-        </ul>
-      </div>
-      <div>
-        <h4>Connect</h4>
-        <ul class="footer-links">
-          <li><a href="https://facebook.com">Facebook</a></li>
-          <li><a href="https://twitter.com">X (Twitter)</a></li>
-          <li><a href="https://linkedin.com">LinkedIn</a></li>
-        </ul>
+
+      <div class="footer-bottom">
+        <span>© <span id="year"></span> KUSU. All rights reserved.</span>
+        <span>Built for members by members – solidarity forever.</span>
       </div>
     </div>
-    <div style="text-align:center; margin-top:20px; font-size:13px;">© <span id="year"></span> KUSU. All rights reserved.</div>
   </footer>
 
-  <script>
-    // Set current year
-    document.getElementById('year').textContent = new Date().getFullYear();
+  <!-- Back to top -->
+  <div class="back-to-top" id="backToTop">
+    <button type="button" aria-label="Back to top"
+            onclick="document.querySelector('#home').scrollIntoView({behavior:'smooth'})">
+      ↑ Top
+    </button>
+  </div>
 
-    // Mobile nav toggle
-    const navToggle = document.getElementById('navToggle');
-    const navLinks = document.querySelector('.nav-links');
-    navToggle && navToggle.addEventListener('click', () => {
-      const expanded = navToggle.getAttribute('aria-expanded') === 'true';
-      navToggle.setAttribute('aria-expanded', !expanded);
-      navLinks.style.display = expanded ? 'none' : 'flex';
+  <!-- Floating WhatsApp – replace number -->
+  <div class="whatsapp-float">
+    <a href="https://wa.me/2547XXXXXXXX" target="_blank" rel="noopener"
+       aria-label="Chat with KUSU on WhatsApp">
+      <span class="whatsapp-icon">✆</span>
+      <span class="label">Talk to KUSU</span>
+    </a>
+  </div>
+
+  <script>
+    // Year
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    // Mobile nav
+    const navToggle = document.getElementById("navToggle");
+    const navMobile = document.getElementById("navMobile");
+
+    if (navToggle) {
+      navToggle.addEventListener("click", () => {
+        const open = navMobile.classList.toggle("open");
+        navToggle.setAttribute("aria-expanded", open ? "true" : "false");
+      });
+    }
+    function closeMobile() {
+      navMobile.classList.remove("open");
+      navToggle.setAttribute("aria-expanded", "false");
+    }
+
+    // Back to top
+    const backToTop = document.getElementById("backToTop");
+    window.addEventListener("scroll", () => {
+      backToTop.style.display = window.scrollY > 400 ? "block" : "none";
     });
 
-    // Theme toggle (optional – you can add a button for this)
+    // Contact form demo
+    function handleContactSubmit(e) {
+      e.preventDefault();
+      const msg = document.getElementById("contactMessage");
+      if (msg) msg.style.display = "block";
+      e.target.reset();
+    }
+
+    // FAQ toggle
+    function toggleFaq(headerEl) {
+      const item = headerEl.closest(".faq-item");
+      item.classList.toggle("open");
+    }
+    window.toggleFaq = toggleFaq;
+
+    // Stats counter when visible
+    const statSection = document.getElementById("stats");
+    const counters = statSection ? statSection.querySelectorAll(".stat-number") : [];
+    let statsStarted = false;
+
+    function runCounters() {
+      counters.forEach(counter => {
+        const target = +counter.dataset.target;
+        let current = 0;
+        const step = Math.max(1, Math.floor(target / 120));
+
+        const interval = setInterval(() => {
+          current += step;
+          if (current >= target) {
+            current = target;
+            clearInterval(interval);
+          }
+          counter.textContent = current.toLocaleString();
+        }, 15);
+      });
+    }
+
+    if ("IntersectionObserver" in window && statSection) {
+      const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting && !statsStarted) {
+            statsStarted = true;
+            runCounters();
+          }
+        });
+      }, { threshold: 0.3 });
+      observer.observe(statSection);
+    } else if (!statsStarted) {
+      runCounters();
+    }
+
+    // Quick search demo
+    function handleQuickSearch() {
+      const input = document.getElementById('siteSearch');
+      if (!input) return;
+      const value = input.value.trim();
+      if (!value) {
+        alert('Type a keyword first, e.g. "CBA", "constitution", "CRB".');
+        return;
+      }
+      alert('Search placeholder for: "' + value + '". Connect this to your real search backend or CMS.');
+    }
+    window.handleQuickSearch = handleQuickSearch;
+
+    // Theme toggle (dark / light)
+    const root = document.documentElement;
+    const themeToggle = document.getElementById("themeToggle");
+    const lightLabel = document.getElementById("lightLabel");
+    const darkLabel = document.getElementById("darkLabel");
+
+    function applyTheme(theme) {
+      if (theme === "dark") {
+        root.classList.add("dark");
+        darkLabel.classList.add("active");
+        lightLabel.classList.remove("active");
+      } else {
+        root.classList.remove("dark");
+        lightLabel.classList.add("active");
+        darkLabel.classList.remove("active");
+      }
+    }
+
+    const savedTheme = localStorage.getItem("kusu-theme");
+    if (savedTheme) {
+      applyTheme(savedTheme);
+    } else {
+      applyTheme("light");
+    }
+
+    if (themeToggle) {
+      themeToggle.addEventListener("click", () => {
+        const isDark = root.classList.contains("dark");
+        const newTheme = isDark ? "light" : "dark";
+        applyTheme(newTheme);
+        localStorage.setItem("kusu-theme", newTheme);
+      });
+    }
   </script>
 </body>
 </html>
